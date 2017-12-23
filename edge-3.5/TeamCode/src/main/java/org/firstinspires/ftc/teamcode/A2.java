@@ -21,16 +21,16 @@ public class A2 extends LinearOpMode {
 
         robot.waitForTick(10);
 
-        robot.closeClampServos();
+        robot.openClampServos(1);
 
         robot.waitForTick(1000);
 
-        robot.driveForwardForSteps(1775, 0.5);
+        robot.driveForwardForSteps(300, 0.5);
 
         robot.waitForTick(100);
 
-        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
+        robot.autoStrafeLeft(300, 0.4);
         robot.driveForwardForSteps(300, 0.2);
-        robot.openClampServos(1);
+        robot.closeClampServos();
     }
 }

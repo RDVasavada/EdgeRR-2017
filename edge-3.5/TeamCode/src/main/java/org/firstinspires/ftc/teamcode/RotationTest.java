@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.*;
+
 
 @Autonomous(name="Rotation Test")
-//@Disabled
+@Disabled
 public class RotationTest extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();

@@ -438,7 +438,7 @@ public class EdgeBot {
 
         int numberOfSteps = (4000 / (360 / degreesToRotate));
 
-        rotateCounterClockwise(0.05);
+        rotateClockwise(0.05);
         waitForTick(100);
         stopDriveMotors();
 
@@ -526,6 +526,105 @@ public class EdgeBot {
 
         setDriveMotorsRunUsingEncoders();
     }
+
+    // Strafe left with encoders and gyro correction
+    public void autoStrafeLeft(int numberOfSteps, double speed)// KT: Made lots of changes!
+    {
+        // Set the motor directions
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        waitForTick(40);
+
+        // Define step counts
+        int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() + numberOfSteps;
+        int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() + numberOfSteps;
+        int rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() + numberOfSteps;
+        int rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() + numberOfSteps;
+
+        waitForTick(40);
+
+        // Set the target steps
+        frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
+        frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
+        rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
+        rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
+
+        waitForTick(40);
+
+        // Turn on run to position
+        setDriveMotorsRunToPosition();
+
+        waitForTick(40);
+
+        // Start motion.
+        setDriveMotorsToCommonSpeed(Math.abs(speed));
+
+        // Keep looping while we are still active, and there is time left, and both motors are running.
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+            waitForTick(50);
+        }
+
+        // Stop all motion
+        setDriveMotorsToCommonSpeed(0);
+
+        waitForTick(40);
+
+        // Turn off run to position
+        setDriveMotorsRunUsingEncoders();
+    }
+
+    // Strafe right with encoders and gyro correction
+    public void autoStrafeRight(int numberOfSteps, double speed)// KT: Made lots of changes!
+    {
+        // Set the motor directions
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        waitForTick(40);
+
+        // Define step counts
+        int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() + numberOfSteps;
+        int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() + numberOfSteps;
+        int rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() + numberOfSteps;
+        int rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() + numberOfSteps;
+
+        waitForTick(40);
+
+        // Set the target steps
+        frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
+        frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
+        rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
+        rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
+
+        waitForTick(40);
+
+        // Turn on run to position
+        setDriveMotorsRunToPosition();
+
+        waitForTick(40);
+
+        // Start motion.
+        setDriveMotorsToCommonSpeed(Math.abs(speed));
+
+        // Keep looping while we are still active, and there is time left, and both motors are running.
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+            waitForTick(50);
+        }
+
+        // Stop all motion
+        setDriveMotorsToCommonSpeed(0);
+
+        waitForTick(40);
+
+        // Turn off run to position
+        setDriveMotorsRunUsingEncoders();
+    }
+
 
     // Lower the lift
     public void lowerLiftMotor(double power) {

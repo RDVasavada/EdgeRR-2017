@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "A-1", group = "Sensor")
+@Autonomous(name = "A-2-2", group = "Sensor")
 //@Disabled
-public class A1 extends LinearOpMode {
+public class A22 extends LinearOpMode {
 
     // The hardware object
     EdgeBot robot;
@@ -25,10 +25,12 @@ public class A1 extends LinearOpMode {
 
         robot.waitForTick(1000);
 
-        robot.driveForwardForSteps(1775, 0.5);
+        robot.driveForwardForSteps(300, 0.5);
 
         robot.waitForTick(100);
 
+        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+        robot.driveForwardForSteps(300, 0.2);
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
         robot.driveForwardForSteps(300, 0.2);
         robot.closeClampServos();
