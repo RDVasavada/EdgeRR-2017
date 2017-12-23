@@ -599,10 +599,19 @@ public class EdgeBot {
     // Open the clamp servos
     public void openClampServos(double power) {
         // Scale the power
-        double positionChange = power * 0.5;
+        double positionChange = power * 0.6;
 
-        clampServoLeft.setPosition(0.5 + positionChange);
-        clampServoRight.setPosition(0.5 - positionChange);
+        clampServoLeft.setPosition(0.4 + positionChange);
+        clampServoRight.setPosition(0.6 - positionChange);
+    }
+
+    // Return whether the clamp servos are halfway open
+    public boolean clampServosOpenedHalfway() {
+        if (clampServoLeft.getPosition() == 0.7 && clampServoRight.getPosition() == 0.3) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Move the crane servo left

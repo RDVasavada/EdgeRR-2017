@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Mecanum Wheel and Servo Test")
+@TeleOp(name="Teleop Mode")
 //@Disabled
-public class MecanumAndServo extends LinearOpMode {
+public class EdgeTeleop extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -25,37 +25,25 @@ public class MecanumAndServo extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // Set motor values
-            robot.mecanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, telemetry);
+            // Scale and set motor values
+            double forwardSpeed = gamepad1.left_stick_y;
 
-            // Update the lift motor
-            if (gamepad2.right_trigger > 0.2) {
-                robot.raiseLiftMotor(gamepad2.right_trigger);
-                telemetry.addData("Lift ", "up");
-            } else if (gamepad2.left_trigger > 0.2) {
-                robot.lowerLiftMotor(gamepad2.left_trigger);
-                telemetry.addData("Lift ", "down");
-            } else {
-                robot.stopLiftMotor();
+            if (Math.abs(gamepad1.left_stick_y) < 0.5) {
+                forwardSpeed *= 0.5;
             }
+
+            robot.mecanumDrive(gamepad1.left_stick_x, forwardSpeed, gamepad1.right_stick_x, telemetry);
 
             // Update the clamp servos
-            if (gamepad1.right_trigger > 0.1) {
-                robot.openClampServos(gamepad1.right_trigger);
-                telemetry.addData("Clamp servos ", "open");
-            } else {
-                robot.closeClampServos();
-            }
-
-            // Update the crane motor
             if (gamepad1.a) {
-                robot.craneMotorBackward();
-                telemetry.addData("Crane motor ", "back");
+                robot.closeClampServos();
+                telemetry.addData("Clamp servos ", "closing");
+            } else if (gamepad1.b) {
+                robot.openClampServos(0.5);
+                telemetry.addData("Clamp servos ", "opening halfway");
             } else if (gamepad1.y) {
-                robot.craneMotorForward();
-                telemetry.addData("Crane motor ", "forward");
-            } else {
-                robot.stopCraneMotor();
+                robot.openClampServos(1);
+                telemetry.addData("Clamp servos ", "open fully");
             }
 
             // Update the crane rotation servo
@@ -78,6 +66,28 @@ public class MecanumAndServo extends LinearOpMode {
                 telemetry.addData("wrist ", "moving up");
             } else {
                 robot.clawWristStop();
+            }
+
+            // Update the lift motor
+            if (gamepad2.right_trigger > 0.2) {
+                robot.raiseLiftMotor(gamepad2.right_trigger);
+                telemetry.addData("Lift ", "up");
+            } else if (gamepad2.left_trigger > 0.2) {
+                robot.lowerLiftMotor(gamepad2.left_trigger);
+                telemetry.addData("Lift ", "down");
+            } else {
+                robot.stopLiftMotor();
+            }
+
+            // Update the crane motor
+            if (gamepad2.a) {
+                robot.craneMotorBackward();
+                telemetry.addData("Crane motor ", "back");
+            } else if (gamepad2.y) {
+                robot.craneMotorForward();
+                telemetry.addData("Crane motor ", "forward");
+            } else {
+                robot.stopCraneMotor();
             }
 
             // Update the claw pinch servo
