@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "A-2")
+@Autonomous(name = "B-2")
 //@Disabled
-public class A2 extends LinearOpMode {
+public class B2 extends LinearOpMode {
 
     // The hardware object
     EdgeBot robot;
@@ -49,7 +49,7 @@ public class A2 extends LinearOpMode {
         robot.waitForTick(100);
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForSteps(900, 0.2);
+        robot.driveForwardForSteps(625, 0.2);
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
         robot.driveForwardForSteps(200, 0.2);
 

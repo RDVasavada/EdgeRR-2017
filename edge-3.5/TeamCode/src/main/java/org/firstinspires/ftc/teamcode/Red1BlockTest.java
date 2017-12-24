@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "A-2")
-//@Disabled
-public class A2 extends LinearOpMode {
+@Autonomous(name = "Red 1 Block Test")
+@Disabled
+public class Red1BlockTest extends LinearOpMode {
 
     // The hardware object
     EdgeBot robot;
@@ -44,14 +43,20 @@ public class A2 extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveForwardForSteps(850, 0.5);
+        int x = 1; // In place of the paper reading
+
+        if (x == 1) {
+            robot.driveForwardForSteps(1790, 0.5);
+        } else if (x == 2) {
+            robot.driveForwardForSteps(1500, 0.5);
+        } else if (x == 3) {
+            robot.driveForwardForSteps(1225, 0.5);
+        }
 
         robot.waitForTick(100);
 
-        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForSteps(900, 0.2);
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForSteps(200, 0.2);
+        robot.driveForwardForSteps(300, 0.2);
 
         robot.waitForTick(50);
 

@@ -531,10 +531,10 @@ public class EdgeBot {
     public void autoStrafeLeft(int numberOfSteps, double speed)// KT: Made lots of changes!
     {
         // Set the motor directions
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForTick(40);
 
@@ -580,10 +580,10 @@ public class EdgeBot {
     public void autoStrafeRight(int numberOfSteps, double speed)// KT: Made lots of changes!
     {
         // Set the motor directions
-        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         waitForTick(40);
 
@@ -662,18 +662,13 @@ public class EdgeBot {
 
     // Lower jewel arm
     public void lowerJewelArm() {
-        waitForTick(10);
-        jewelLiftServo.setPosition(0.5);
-        waitForTick(1000);
         jewelLiftServo.setPosition(0.4);
-        waitForTick(1000);
-        jewelLiftServo.setPosition(0.3);
         waitForTick(1000);
         jewelLiftServo.setPosition(0.2);
         waitForTick(1000);
         jewelLiftServo.setPosition(0.1);
         waitForTick(1000);
-        jewelLiftServo.setPosition(0.03);
+        jewelLiftServo.setPosition(0.02);
     }
 
     public void jewelFlipLeft() {
