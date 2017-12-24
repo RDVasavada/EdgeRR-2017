@@ -44,12 +44,10 @@ public class C2 extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveForwardForSteps(850, 0.5);
+        robot.driveBackwardForSteps(1600, 0.5);
 
         robot.waitForTick(100);
 
-        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForSteps(350, 0.2);
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
         robot.driveForwardForSteps(200, 0.2);
 

@@ -725,17 +725,12 @@ public class EdgeBot {
 
     // Move the wrist up
     public void clawWristDown() {
-        clawWristServo.setPosition(0.6);
+        clawWristServo.setPosition(0.7);
     }
 
     // Move the wrist down
     public void clawWristUp() {
         clawWristServo.setPosition(0);
-    }
-
-    // Stop the claw wrist
-    public void clawWristStop() {
-        clawWristServo.setPosition(clawWristServo.getPosition());
     }
 
     // Close the claw
@@ -746,11 +741,6 @@ public class EdgeBot {
     // Open the claw
     public void clawOpen() {
         clawPinchServo.setPosition(0.6);
-    }
-
-    // Stop the claw motion
-    public void clawPinchStop() {
-        clawPinchServo.setPosition(clawPinchServo.getPosition());
     }
 
     public float getGyroHeading() {

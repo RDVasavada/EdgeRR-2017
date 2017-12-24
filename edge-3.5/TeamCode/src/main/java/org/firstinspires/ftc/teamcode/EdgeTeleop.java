@@ -64,8 +64,6 @@ public class EdgeTeleop extends LinearOpMode {
             } else if (gamepad2.right_stick_y < -0.1) {
                 robot.clawWristUp();
                 telemetry.addData("wrist ", "moving up");
-            } else {
-                robot.clawWristStop();
             }
 
             // Update the lift motor
@@ -97,8 +95,6 @@ public class EdgeTeleop extends LinearOpMode {
             } else if (gamepad2.x) {
                 robot.clawOpen();
                 telemetry.addData("claw ", "opening");
-            } else {
-                robot.clawPinchStop();
             }
 
             // Show the elapsed game time and wheel power.

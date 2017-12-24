@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "Red 2 Full Autonomous")
+@Autonomous(name = "Blue 2 Full Autonomous")
 //@Disabled
-public class Red2FullAuton extends LinearOpMode {
+public class Blue2FullAuton extends LinearOpMode {
 
     // The hardware object
     EdgeBot robot;
@@ -110,12 +110,12 @@ public class Red2FullAuton extends LinearOpMode {
 
                 // Act depending on the orientation of the balls
                 if (redOnLeft) {
-                    robot.jewelFlipRight();
+                    robot.jewelFlipLeft();
                     telemetry.addLine()
                             .addData("Red detected on ", "left")
                             .addData("Blue detected on ", "right");
                 } else {
-                    robot.jewelFlipLeft();
+                    robot.jewelFlipRight();
                     telemetry.addLine()
                             .addData("Blue detected on ", "left")
                             .addData("Red detected on ", "right");
@@ -185,11 +185,11 @@ public class Red2FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveForwardForSteps(850, 0.5);
+        robot.driveBackwardForSteps(1150, 0.5);
 
         robot.waitForTick(100);
 
-        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
 
         if (column == RelicRecoveryVuMark.LEFT) {
             robot.driveForwardForSteps(1200, 0.5);
