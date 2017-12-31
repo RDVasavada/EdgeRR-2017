@@ -200,7 +200,7 @@ public class Blue1FullAuton extends LinearOpMode {
 
         robot.waitForTick(50);
 
-        robot.openClampServos(1);
+        robot.openClampServos();
 
         robot.waitForTick(500);
 

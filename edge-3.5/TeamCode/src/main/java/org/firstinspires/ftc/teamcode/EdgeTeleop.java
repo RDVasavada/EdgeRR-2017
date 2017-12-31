@@ -39,10 +39,10 @@ public class EdgeTeleop extends LinearOpMode {
                 robot.closeClampServos();
                 telemetry.addData("Clamp servos ", "closing");
             } else if (gamepad1.b) {
-                robot.openClampServos(0.5);
+                robot.openClampServosHalfway();
                 telemetry.addData("Clamp servos ", "opening halfway");
             } else if (gamepad1.y) {
-                robot.openClampServos(1);
+                robot.openClampServos();
                 telemetry.addData("Clamp servos ", "open fully");
             }
 

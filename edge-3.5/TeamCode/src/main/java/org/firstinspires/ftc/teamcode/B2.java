@@ -53,7 +53,7 @@ public class B2 extends LinearOpMode {
 
         robot.waitForTick(50);
 
-        robot.openClampServos(1);
+        robot.openClampServos();
 
         robot.waitForTick(500);
 

@@ -97,7 +97,7 @@ public class EdgeBot {
         clampServoLeft = hMap.servo.get("leftclamp");
         clampServoRight = hMap.servo.get("rightclamp");
 
-        openClampServos(1);
+        openClampServos();
 
         // Initialize the crane servos
         craneRotateServo = hMap.crservo.get("cranerotate");
@@ -686,17 +686,20 @@ public class EdgeBot {
 
     // Close the clamp servos
     public void closeClampServos() {
-        clampServoLeft.setPosition(0.4);
-        clampServoRight.setPosition(0.6);
+        clampServoLeft.setPosition(0.82);
+        clampServoRight.setPosition(0.24);
+    }
+
+    // Open the clamp servos halfway for isolating one block
+    public void openClampServosHalfway() {
+        clampServoLeft.setPosition(0.7);
+        clampServoRight.setPosition(0.37);
     }
 
     // Open the clamp servos
-    public void openClampServos(double power) {
-        // Scale the power
-        double positionChange = power * 0.6;
-
-        clampServoLeft.setPosition(0.4 + positionChange);
-        clampServoRight.setPosition(0.6 - positionChange);
+    public void openClampServos() {
+        clampServoLeft.setPosition(0.33);
+        clampServoRight.setPosition(0.65);
     }
 
     // Return whether the clamp servos are halfway open
