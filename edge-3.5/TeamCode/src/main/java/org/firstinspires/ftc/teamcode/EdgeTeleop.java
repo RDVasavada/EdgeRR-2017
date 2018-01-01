@@ -64,24 +64,27 @@ public class EdgeTeleop extends LinearOpMode {
             } else if (gamepad2.right_stick_y < -0.1) {
                 robot.clawWristUp();
                 telemetry.addData("wrist ", "moving up");
+            } else if (gamepad2.a) {
+                robot.clawWristHalfway();
+                telemetry.addData("wrist ", "halfway");
             }
 
             // Update the lift motor
-            if (gamepad2.right_trigger > 0.2) {
-                robot.raiseLiftMotor(gamepad2.right_trigger);
+            if (gamepad1.right_trigger > 0.2) {
+                robot.raiseLiftMotor(gamepad1.right_trigger);
                 telemetry.addData("Lift ", "up");
-            } else if (gamepad2.left_trigger > 0.2) {
-                robot.lowerLiftMotor(gamepad2.left_trigger);
+            } else if (gamepad1.left_trigger > 0.2) {
+                robot.lowerLiftMotor(gamepad1.left_trigger);
                 telemetry.addData("Lift ", "down");
             } else {
                 robot.stopLiftMotor();
             }
 
             // Update the crane motor
-            if (gamepad2.a) {
+            if (gamepad2.left_trigger > 0.2) {
                 robot.craneMotorBackward();
                 telemetry.addData("Crane motor ", "back");
-            } else if (gamepad2.y) {
+            } else if (gamepad2.right_trigger > 0.2) {
                 robot.craneMotorForward();
                 telemetry.addData("Crane motor ", "forward");
             } else {
@@ -92,6 +95,9 @@ public class EdgeTeleop extends LinearOpMode {
             if (gamepad2.b) {
                 robot.clawPinch();
                 telemetry.addData("claw ", "pinching");
+            } else if (gamepad2.y) {
+                robot.clawPinchHalfway();
+                telemetry.addData("claw ", "pinching halfway");
             } else if (gamepad2.x) {
                 robot.clawOpen();
                 telemetry.addData("claw ", "opening");

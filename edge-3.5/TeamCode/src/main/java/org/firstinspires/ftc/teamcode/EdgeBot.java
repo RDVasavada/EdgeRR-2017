@@ -662,13 +662,13 @@ public class EdgeBot {
 
     // Lower jewel arm
     public void lowerJewelArm() {
+        jewelLiftServo.setPosition(0.7);
+        waitForTick(1000);
+        jewelLiftServo.setPosition(0.5);
+        waitForTick(1000);
         jewelLiftServo.setPosition(0.4);
         waitForTick(1000);
-        jewelLiftServo.setPosition(0.2);
-        waitForTick(1000);
-        jewelLiftServo.setPosition(0.1);
-        waitForTick(1000);
-        jewelLiftServo.setPosition(0.02);
+        jewelLiftServo.setPosition(0.35);
     }
 
     public void jewelFlipLeft() {
@@ -680,35 +680,26 @@ public class EdgeBot {
     }
 
     public void resetJewelServos() {
-        jewelLiftServo.setPosition(0.6);
+        jewelLiftServo.setPosition(0.9);
         jewelFlipServo.setPosition(0.5);
     }
 
     // Close the clamp servos
     public void closeClampServos() {
-        clampServoLeft.setPosition(0.82);
+        clampServoLeft.setPosition(0.71);
         clampServoRight.setPosition(0.24);
     }
 
     // Open the clamp servos halfway for isolating one block
     public void openClampServosHalfway() {
-        clampServoLeft.setPosition(0.7);
+        clampServoLeft.setPosition(0.58);
         clampServoRight.setPosition(0.37);
     }
 
     // Open the clamp servos
     public void openClampServos() {
-        clampServoLeft.setPosition(0.33);
+        clampServoLeft.setPosition(0.30);
         clampServoRight.setPosition(0.65);
-    }
-
-    // Return whether the clamp servos are halfway open
-    public boolean clampServosOpenedHalfway() {
-        if (clampServoLeft.getPosition() == 0.7 && clampServoRight.getPosition() == 0.3) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     // Move the crane servo left
@@ -728,22 +719,32 @@ public class EdgeBot {
 
     // Move the wrist up
     public void clawWristDown() {
-        clawWristServo.setPosition(0.7);
+        clawWristServo.setPosition(0);
+    }
+
+    // Put the claw wrist in a halfway position
+    public void clawWristHalfway() {
+        clawWristServo.setPosition(0.18);
     }
 
     // Move the wrist down
     public void clawWristUp() {
-        clawWristServo.setPosition(0);
+        clawWristServo.setPosition(0.5);
     }
 
     // Close the claw
     public void clawPinch() {
-        clawPinchServo.setPosition(0.2);
+        clawPinchServo.setPosition(0.6);
+    }
+
+    // Pinch halfway
+    public void clawPinchHalfway() {
+        clawPinchServo.setPosition(0.8);
     }
 
     // Open the claw
     public void clawOpen() {
-        clawPinchServo.setPosition(0.6);
+        clawPinchServo.setPosition(1);
     }
 
     public float getGyroHeading() {
@@ -803,6 +804,12 @@ public class EdgeBot {
     public void turnOnLEDs() {
         leftLED.setState(true);
         rightLED.setState(true);
+    }
+
+    // Convert from inches to encoder counts
+    public int inchToEncoder(float inches) {
+        int ticks = Math.round(inches * 40); // 40 encoder ticks for one inch
+        return ticks;
     }
 
 }
