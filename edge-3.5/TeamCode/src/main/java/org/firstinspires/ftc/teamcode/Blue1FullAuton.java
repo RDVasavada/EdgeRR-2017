@@ -78,7 +78,7 @@ public class Blue1FullAuton extends LinearOpMode {
                 boolean rightSensorRed = ((rightHue > Constants.RED_LOW_1) && (rightHue < Constants.RED_HIGH_1)) || ((rightHue > Constants.RED_LOW_2) && (rightHue < Constants.RED_HIGH_2));
                 boolean rightSensorBlue = (rightHue > Constants.BLUE_LOW) && (rightHue < Constants.BLUE_HIGH);
 
-                if (period.seconds() < 10) {
+                if (period.seconds() < 5) {
                     // Check if both sensors have determined a color
                     if (leftSensorRed && rightSensorBlue) {
                         redOnLeft = true;

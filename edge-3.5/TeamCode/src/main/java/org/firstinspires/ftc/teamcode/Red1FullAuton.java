@@ -78,7 +78,7 @@ public class Red1FullAuton extends LinearOpMode {
                 boolean rightSensorRed = ((rightHue > Constants.RED_LOW_1) && (rightHue < Constants.RED_HIGH_1)) || ((rightHue > Constants.RED_LOW_2) && (rightHue < Constants.RED_HIGH_2));
                 boolean rightSensorBlue = (rightHue > Constants.BLUE_LOW) && (rightHue < Constants.BLUE_HIGH);
 
-                if (period.seconds() < 10) {
+                if (period.seconds() < 5) {
                     // Check if both sensors have determined a color
                     if (leftSensorRed && rightSensorBlue) {
                         redOnLeft = true;
@@ -186,17 +186,17 @@ public class Red1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForSteps(1785, 0.5);
+            robot.driveForwardForInches(44.8, 0.5);
         } else if (column == RelicRecoveryVuMark.CENTER) {
-            robot.driveForwardForSteps(1500, 0.5);
+            robot.driveForwardForInches(35, 0.5);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForSteps(1225, 0.5);
+            robot.driveForwardForInches(28.5, 0.5);
         }
 
         robot.waitForTick(100);
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForSteps(220, 0.2);
+        robot.driveForwardForInches(5.6, 0.2);
 
         robot.waitForTick(50);
 
@@ -204,6 +204,6 @@ public class Red1FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveBackwardForSteps(100, 0.3);
+        robot.driveBackwardForInches(2.6, 0.3);
     }
 }

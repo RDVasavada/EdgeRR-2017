@@ -281,6 +281,18 @@ public class EdgeBot {
         setDriveMotorsRunUsingEncoders();
     }
 
+    public void driveForwardForInches(double inches, double speed) {
+        int steps = inchToEncoder(inches);
+
+        driveForwardForSteps(steps, speed);
+    }
+
+    public void driveBackwardForInches(double inches, double speed) {
+        int steps = inchToEncoder(inches);
+
+        driveBackwardForSteps(steps, speed);
+    }
+
     // Set motors to common speed
     public void setDriveMotorsToCommonSpeed(double speed) {
         frontLeftMotor.setPower(speed);
@@ -625,7 +637,6 @@ public class EdgeBot {
         setDriveMotorsRunUsingEncoders();
     }
 
-
     // Lower the lift
     public void lowerLiftMotor(double power) {
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -689,7 +700,7 @@ public class EdgeBot {
         clampServoLeft.setPosition(0.71);
         clampServoRight.setPosition(0.24);
     }
-
+z
     // Open the clamp servos halfway for isolating one block
     public void openClampServosHalfway() {
         clampServoLeft.setPosition(0.58);
@@ -704,12 +715,12 @@ public class EdgeBot {
 
     // Move the crane servo left
     public void craneRotateLeft() {
-        craneRotateServo.setPower(-0.2);
+        craneRotateServo.setPower(-0.1);
     }
 
     // Move the crane servo right
     public void craneRotateRight() {
-        craneRotateServo.setPower(0.2);
+        craneRotateServo.setPower(0.1);
     }
 
     // Stop the crane servo
@@ -807,8 +818,9 @@ public class EdgeBot {
     }
 
     // Convert from inches to encoder counts
-    public int inchToEncoder(float inches) {
-        int ticks = Math.round(inches * 40); // 40 encoder ticks for one inch
+    public int inchToEncoder(double inches) {
+        int ticks = (int)Math.round(inches * 39); // 39 encoder ticks for one inch
+
         return ticks;
     }
 

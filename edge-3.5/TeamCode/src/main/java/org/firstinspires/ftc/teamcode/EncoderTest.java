@@ -20,12 +20,6 @@ public class EncoderTest extends LinearOpMode {
         robot = new EdgeBot();
         robot.init(hardwareMap);
 
-        // Initialize the timer
-        timer = new ElapsedTime();
-
-        // Wait for the start button to be pressed.
-        waitForStart();
-
-        robot.driveForwardForSteps(robot.inchToEncoder(12), 0.3);
+        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
     }
 }

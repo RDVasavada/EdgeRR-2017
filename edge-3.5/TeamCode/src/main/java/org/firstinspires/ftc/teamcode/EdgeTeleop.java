@@ -28,11 +28,22 @@ public class EdgeTeleop extends LinearOpMode {
             // Scale and set motor values
             double forwardSpeed = gamepad1.left_stick_y;
 
-            if (Math.abs(gamepad1.left_stick_y) < 0.5) {
+            if (Math.abs(forwardSpeed) < 0.5) {
                 forwardSpeed *= 0.5;
             }
 
             robot.mecanumDrive(gamepad1.left_stick_x, forwardSpeed, gamepad1.right_stick_x, telemetry);
+
+            // Update the lift motor
+            if (gamepad1.right_trigger > 0.2) {
+                robot.raiseLiftMotor(gamepad1.right_trigger);
+                telemetry.addData("Lift ", "up");
+            } else if (gamepad1.left_trigger > 0.2) {
+                robot.lowerLiftMotor(gamepad1.left_trigger);
+                telemetry.addData("Lift ", "down");
+            } else {
+                robot.stopLiftMotor();
+            }
 
             // Update the clamp servos
             if (gamepad1.a) {
@@ -67,17 +78,6 @@ public class EdgeTeleop extends LinearOpMode {
             } else if (gamepad2.a) {
                 robot.clawWristHalfway();
                 telemetry.addData("wrist ", "halfway");
-            }
-
-            // Update the lift motor
-            if (gamepad1.right_trigger > 0.2) {
-                robot.raiseLiftMotor(gamepad1.right_trigger);
-                telemetry.addData("Lift ", "up");
-            } else if (gamepad1.left_trigger > 0.2) {
-                robot.lowerLiftMotor(gamepad1.left_trigger);
-                telemetry.addData("Lift ", "down");
-            } else {
-                robot.stopLiftMotor();
             }
 
             // Update the crane motor
