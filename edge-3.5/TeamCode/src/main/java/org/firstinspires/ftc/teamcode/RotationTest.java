@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Encoder test")
+@Autonomous(name = "Rotation test")
 //@Disabled
-public class EncoderTest extends LinearOpMode {
+public class RotationTest extends LinearOpMode {
 
     // The hardware object
     EdgeBot robot;
@@ -20,6 +20,6 @@ public class EncoderTest extends LinearOpMode {
         robot = new EdgeBot();
         robot.init(hardwareMap);
 
-        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
+        robot.rotateClockwiseGyro(90, 0.3, telemetry, this);
     }
 }

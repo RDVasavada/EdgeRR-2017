@@ -539,6 +539,46 @@ public class EdgeBot {
         setDriveMotorsRunUsingEncoders();
     }
 
+    // Rotate clockwise by a given amount and at a given speed with using  gyro correction
+    public void rotateClockwiseGyro(float targetDegrees, double speed, Telemetry telemetry, RotationTest sender) {
+        // Stop the drive motors
+        setDriveMotorsRunUsingEncoders();
+
+        rotateClockwise(0.05);
+        waitForTick(100);
+        stopDriveMotors();
+
+        // Record initial heading
+        Orientation initialAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        float initialHeading = initialAngles.firstAngle;
+
+        // Set target heading
+        float targetHeading = initialHeading + targetDegrees;
+
+        waitForTick(50);
+
+        rotateClockwise(speed);
+
+        boolean finishedRotating = false;
+
+        // Loop until we are within 2 degrees of the target heading
+        while (!finishedRotating && sender.opModeIsActive()) {
+            // Correct based on the gyro
+            Orientation currentAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            float currentHeading = currentAngles.firstAngle;
+
+            float error = Math.abs(targetHeading - currentHeading);
+
+            if (error < 2) {
+                finishedRotating = true;
+            }
+        }
+
+        stopDriveMotors();
+
+        setDriveMotorsRunUsingEncoders();
+    }
+
     // Strafe left with encoders and gyro correction
     public void autoStrafeLeft(int numberOfSteps, double speed)// KT: Made lots of changes!
     {
@@ -700,7 +740,7 @@ public class EdgeBot {
         clampServoLeft.setPosition(0.71);
         clampServoRight.setPosition(0.24);
     }
-z
+
     // Open the clamp servos halfway for isolating one block
     public void openClampServosHalfway() {
         clampServoLeft.setPosition(0.58);
