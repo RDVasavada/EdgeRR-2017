@@ -55,12 +55,14 @@ public class Red2FullAuton extends LinearOpMode {
         // Lower the lift servo
         robot.lowerJewelArm();
 
+        robot.waitForTick(1800);
+
         // Start the timer
         period = new ElapsedTime();
         period.reset();
 
         // Loop and read the RGB data.
-        while (opModeIsActive() && !jewelFlipped) {
+        while (opModeIsActive() && !jewelFlipped && period.seconds() < 10) {
 
             if (!orientationDetermined) { // Ball orientation not determined
 
@@ -192,11 +194,11 @@ public class Red2FullAuton extends LinearOpMode {
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(30.8, 0.5);
+            robot.driveForwardForInches(30.8, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER) {
-            robot.driveForwardForInches(17.3, 0.5);
+            robot.driveForwardForInches(17.3, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(7.7, 0.5);
+            robot.driveForwardForInches(7.7, 0.4);
         }
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);

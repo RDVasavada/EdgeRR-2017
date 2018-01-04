@@ -78,6 +78,9 @@ public class EdgeTeleop extends LinearOpMode {
             } else if (gamepad2.a) {
                 robot.clawWristHalfway();
                 telemetry.addData("wrist ", "halfway");
+            } else if (gamepad2.b) {
+                robot.clawWristLow();
+                telemetry.addData("wrist ", "halfway (lower)");
             }
 
             // Update the crane motor
@@ -92,10 +95,10 @@ public class EdgeTeleop extends LinearOpMode {
             }
 
             // Update the claw pinch servo
-            if (gamepad2.b) {
+            if (gamepad2.y) {
                 robot.clawPinch();
                 telemetry.addData("claw ", "pinching");
-            } else if (gamepad2.y) {
+            } else if (gamepad2.right_bumper) {
                 robot.clawPinchHalfway();
                 telemetry.addData("claw ", "pinching halfway");
             } else if (gamepad2.x) {

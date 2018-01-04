@@ -55,12 +55,14 @@ public class Blue1FullAuton extends LinearOpMode {
         // Lower the lift servo
         robot.lowerJewelArm();
 
+        robot.waitForTick(1800);
+
         // Start the timer
         period = new ElapsedTime();
         period.reset();
 
         // Loop and read the RGB data.
-        while (opModeIsActive() && !jewelFlipped) {
+        while (opModeIsActive() && !jewelFlipped && period.seconds() < 10) {
 
             if (!orientationDetermined) { // Ball orientation not determined
 
@@ -186,11 +188,11 @@ public class Blue1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveBackwardForSteps(925, 0.5);
+            robot.driveBackwardForSteps(925, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER) {
-            robot.driveBackwardForSteps(1175, 0.5);
+            robot.driveBackwardForSteps(1175, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveBackwardForSteps(1625, 0.5);
+            robot.driveBackwardForSteps(1625, 0.4);
         }
 
         robot.waitForTick(100);

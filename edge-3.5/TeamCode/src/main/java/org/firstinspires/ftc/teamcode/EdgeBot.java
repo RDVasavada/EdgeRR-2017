@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -55,6 +57,9 @@ public class EdgeBot {
     // Declare color sensors
     public ColorSensor leftColorSensor = null;
     public ColorSensor rightColorSensor = null;
+
+    // Declare distance sensor
+    public ModernRoboticsI2cRangeSensor distanceSensor = null;
 
     // Declare color sensor LEDs
     public DigitalChannel leftLED = null;
@@ -105,7 +110,7 @@ public class EdgeBot {
         clawPinchServo = hMap.servo.get("clawpinch");
 
         clawWristDown();
-        clawOpen();
+        clawPinch();
 
         // Initialize the imu
         imu = hMap.get(BNO055IMU.class, "imu");
@@ -345,6 +350,105 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(speed);
     }
 
+    // Rotate counterclockwise by a given amount and at a given speed with using encoders and gyro correction (IN PROGRESS)
+    public void rotateCounterClockwiseEncoder2(int targetDegrees, double speed, Telemetry telemetry) {
+        // Adjust the degrees to rotate
+        int degreesToRotate = targetDegrees - 20;
+
+        int numberOfSteps = (4000 / (360 / degreesToRotate));
+
+        rotateCounterClockwise(0.05);
+        waitForTick(100);
+        stopDriveMotors();
+
+        // Record initial heading
+        float initialHeading = getCounterClockwiseGyroHeading();
+
+        if (initialHeading > 180) {
+            initialHeading -= 360;
+        }
+
+        // Reset the encoders and set mode
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        waitForTick(50);
+
+        setDriveMotorsRunToPosition();
+
+        waitForTick(50);
+
+        int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
+        int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
+        int rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
+        int rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
+
+        // Set target steps
+        frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
+        frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
+        rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
+        rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
+
+        waitForTick(50);
+
+        setDriveMotorsToCommonSpeed(speed);
+
+        // Keep looping while we are still active, and there is time left, and both motors are running.
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+            waitForTick(50);
+        }
+
+        // Correct based on the gyro
+        float finalHeading = getCounterClockwiseGyroHeading();
+        float degreesRotated = getCounterClockwiseGyroHeading() - initialHeading;
+        float degreesLeft = targetDegrees - degreesRotated;
+
+        // Loop until the achieved heading is within five degrees of the target
+        while (Math.abs(degreesLeft) > 5) {
+            numberOfSteps = Math.round(4000 / (360 / degreesLeft));
+
+            telemetry.addData("Initial heading", initialHeading);
+            telemetry.addData("Final heading", finalHeading);
+            telemetry.addData("Degrees rotated", degreesRotated);
+            telemetry.addData("Correction", degreesLeft);
+            telemetry.addData("Number of steps", numberOfSteps);
+            telemetry.update();
+
+            //waitForTick(4000);
+
+            frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
+            frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
+            rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
+            rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
+
+            // Set target steps
+            frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
+            frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
+            rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
+            rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
+
+            frontRightMotor.setPower(speed);
+            frontLeftMotor.setPower(speed);
+            rearRightMotor.setPower(speed);
+            rearLeftMotor.setPower(speed);
+
+            // Keep looping while we are still active, and there is time left, and both motors are running.
+            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy()) {
+                waitForTick(50);
+            }
+
+            finalHeading = getCounterClockwiseGyroHeading();
+            degreesRotated = getCounterClockwiseGyroHeading() - initialHeading;
+            degreesLeft = targetDegrees - degreesRotated;
+        }
+
+        stopDriveMotors();
+
+        setDriveMotorsRunUsingEncoders();
+    }
+
     // Rotate counterclockwise by a given amount and at a given speed with using encoders and gyro correction
     public void rotateCounterClockwiseEncoder(int targetDegrees, double speed, Telemetry telemetry) {
         // Adjust the degrees to rotate
@@ -539,8 +643,105 @@ public class EdgeBot {
         setDriveMotorsRunUsingEncoders();
     }
 
-    // Rotate clockwise by a given amount and at a given speed with using  gyro correction
-    public void rotateClockwiseGyro(float targetDegrees, double speed, Telemetry telemetry, RotationTest sender) {
+    // Rotate clockwise by a given amount and at a given speed with using encoders and gyro correction (IN PROGRESS)
+    public void rotateClockwiseEncoder2(int targetDegrees, double speed, Telemetry telemetry) {
+        // Adjust the degrees to rotate
+        int degreesToRotate = targetDegrees - 20;
+
+        int numberOfSteps = (4000 / (360 / degreesToRotate));
+
+        rotateClockwise(0.05);
+        waitForTick(100);
+        stopDriveMotors();
+
+        // Record initial heading
+        float initialHeading = getClockwiseGyroHeading();
+
+        if (initialHeading > 180) {
+            initialHeading -= 360;
+        }
+
+        // Reset the encoders and set mode
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        waitForTick(50);
+
+        setDriveMotorsRunToPosition();
+
+        waitForTick(50);
+
+        int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
+        int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
+        int rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
+        int rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
+
+        // Set target steps
+        frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
+        frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
+        rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
+        rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
+
+        waitForTick(50);
+
+        setDriveMotorsToCommonSpeed(speed);
+
+        // Keep looping while we are still active, and there is time left, and both motors are running.
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+            waitForTick(50);
+        }
+
+        // Correct based on the gyro
+        float finalHeading = getClockwiseGyroHeading();
+        float degreesRotated = finalHeading - initialHeading;
+        float degreesLeft = targetDegrees - degreesRotated;
+
+        // Loop until the achieved heading is within five degrees of the target
+        while (Math.abs(degreesLeft) > 5) {
+            numberOfSteps = Math.round(4000 / (360 / degreesLeft));
+
+            telemetry.addData("Initial heading", initialHeading);
+            telemetry.addData("Final heading", finalHeading);
+            telemetry.addData("Degrees rotated", degreesRotated);
+            telemetry.addData("Correction", degreesLeft);
+            telemetry.addData("Number of steps", numberOfSteps);
+            telemetry.update();
+
+            frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
+            frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
+            rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
+            rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
+
+            // Set target steps
+            frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
+            frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
+            rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
+            rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
+
+            frontRightMotor.setPower(speed);
+            frontLeftMotor.setPower(speed);
+            rearRightMotor.setPower(speed);
+            rearLeftMotor.setPower(speed);
+
+            // Keep looping while we are still active, and there is time left, and both motors are running.
+            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy()) {
+                waitForTick(50);
+            }
+
+            finalHeading = getClockwiseGyroHeading();
+            degreesRotated = finalHeading - initialHeading;
+            degreesLeft = targetDegrees - degreesRotated;
+        }
+
+        stopDriveMotors();
+
+        setDriveMotorsRunUsingEncoders();
+    }
+
+    // Rotate clockwise by a given amount and at a given speed with using  gyro correction (IN PROGRESS)
+    public void rotateToGyroHeading(float targetDegrees, double speed, Telemetry telemetry, RotationTest sender) {
         // Stop the drive motors
         setDriveMotorsRunUsingEncoders();
 
@@ -714,11 +915,11 @@ public class EdgeBot {
     // Lower jewel arm
     public void lowerJewelArm() {
         jewelLiftServo.setPosition(0.7);
-        waitForTick(1000);
+        waitForTick(500);
         jewelLiftServo.setPosition(0.5);
-        waitForTick(1000);
+        waitForTick(500);
         jewelLiftServo.setPosition(0.4);
-        waitForTick(1000);
+        waitForTick(500);
         jewelLiftServo.setPosition(0.35);
     }
 
@@ -773,6 +974,11 @@ public class EdgeBot {
         clawWristServo.setPosition(0);
     }
 
+    // Put the claw wrist in a lower than halfway position
+    public void clawWristLow() {
+        clawWristServo.setPosition(0.12);
+    }
+
     // Put the claw wrist in a halfway position
     public void clawWristHalfway() {
         clawWristServo.setPosition(0.18);
@@ -798,9 +1004,42 @@ public class EdgeBot {
         clawPinchServo.setPosition(1);
     }
 
-    public float getGyroHeading() {
+    // Get the gyro heading with counterclockwise as positive
+    public float getCounterClockwiseGyroHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.firstAngle;
+        float rawAngle = angles.firstAngle;
+        /*
+        The gyro returns clockwise values as negative from 0 to -180, and counterclockwise as 0 to 180
+        Therefore, we have to convert to standard 0-360 values with counterclockwise as positive
+         */
+        float convertedAngle;
+
+        if (rawAngle < 0) {
+            convertedAngle = 360 + rawAngle;
+        } else {
+            convertedAngle = rawAngle;
+        }
+
+        return convertedAngle;
+    }
+
+    // Get the gyro heading with clockwise and positive
+    public float getClockwiseGyroHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        float rawAngle = angles.firstAngle;
+        /*
+        The gyro returns clockwise values as negative from 0 to -180, and counterclockwise as 0 to 180
+        Therefore, we have to convert to standard 0-360 values with clockwise as positive
+         */
+        float convertedAngle;
+
+        if (rawAngle < 0) {
+            convertedAngle = rawAngle * -1;
+        } else {
+            convertedAngle = 360 - rawAngle;
+        }
+
+        return convertedAngle;
     }
 
     // Displays RGB info from the color sensors

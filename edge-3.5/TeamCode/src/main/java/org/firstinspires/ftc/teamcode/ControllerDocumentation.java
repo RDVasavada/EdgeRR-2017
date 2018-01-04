@@ -14,8 +14,9 @@ package org.firstinspires.ftc.teamcode;
         - Right Joystick: Up Down Crane Wrist
         - Left Trigger: Crane Motor Back
         - Right Trigger: Crane Motor Forwards
+        - Right Bumper: Claw pinch halfway
         - A Button: Claw wrist halfway
-        - B Button: Claw pinch
+        - B Button: Claw wrist halfway (lower)
         - X Button: Claw open
-        - Y Button: Claw pinch halfway
+        - Y Button: Claw pinch
  */

@@ -20,6 +20,28 @@ public class RotationTest extends LinearOpMode {
         robot = new EdgeBot();
         robot.init(hardwareMap);
 
-        robot.rotateClockwiseGyro(90, 0.3, telemetry, this);
+        timer = new ElapsedTime();
+
+        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+
+        timer.reset();
+
+        while (timer.seconds() < 2) {
+
+        }
+
+        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+
+        while (timer.seconds() < 2) {
+
+        }
+
+        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
+
+        while (timer.seconds() < 2) {
+
+        }
+
+        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
     }
 }

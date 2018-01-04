@@ -55,12 +55,14 @@ public class Red1FullAuton extends LinearOpMode {
         // Lower the lift servo
         robot.lowerJewelArm();
 
+        robot.waitForTick(1800);
+
         // Start the timer
         period = new ElapsedTime();
         period.reset();
 
         // Loop and read the RGB data.
-        while (opModeIsActive() && !jewelFlipped) {
+        while (opModeIsActive() && !jewelFlipped && period.seconds() < 10) {
 
             if (!orientationDetermined) { // Ball orientation not determined
 
@@ -78,26 +80,13 @@ public class Red1FullAuton extends LinearOpMode {
                 boolean rightSensorRed = ((rightHue > Constants.RED_LOW_1) && (rightHue < Constants.RED_HIGH_1)) || ((rightHue > Constants.RED_LOW_2) && (rightHue < Constants.RED_HIGH_2));
                 boolean rightSensorBlue = (rightHue > Constants.BLUE_LOW) && (rightHue < Constants.BLUE_HIGH);
 
-                if (period.seconds() < 5) {
-                    // Check if both sensors have determined a color
-                    if (leftSensorRed && rightSensorBlue) {
-                        redOnLeft = true;
-                        orientationDetermined = true;
-                    } else if (leftSensorBlue && rightSensorRed) {
-                        redOnLeft = false;
-                        orientationDetermined = true;
-                    }
-
-                    telemetry.addData("Verifying ", "both colors");
-                } else {
-                    // Check if one sensor has determined a color
-                    if ((leftSensorRed && !rightSensorRed) || (!leftSensorBlue && rightSensorBlue)) {
-                        redOnLeft = true;
-                        orientationDetermined = true;
-                    } else if ((!leftSensorRed && rightSensorRed) || (leftSensorBlue && !rightSensorBlue)) {
-                        redOnLeft = false;
-                        orientationDetermined = true;
-                    }
+                // Check if one sensor has determined a color
+                if ((leftSensorRed && !rightSensorRed) || (!leftSensorBlue && rightSensorBlue)) {
+                    redOnLeft = true;
+                    orientationDetermined = true;
+                } else if ((!leftSensorRed && rightSensorRed) || (leftSensorBlue && !rightSensorBlue)) {
+                    redOnLeft = false;
+                    orientationDetermined = true;
                 }
 
                 telemetry.update();
@@ -186,11 +175,11 @@ public class Red1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(44.8, 0.5);
+            robot.driveForwardForInches(44.8, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER) {
-            robot.driveForwardForInches(35, 0.5);
+            robot.driveForwardForInches(35, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(28.5, 0.5);
+            robot.driveForwardForInches(28.5, 0.4);
         }
 
         robot.waitForTick(100);
