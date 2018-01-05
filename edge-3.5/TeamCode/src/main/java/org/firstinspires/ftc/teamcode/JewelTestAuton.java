@@ -27,7 +27,7 @@ public class JewelTestAuton extends LinearOpMode {
     public void runOpMode() {
         // Initialize the hardware object
         robot = new EdgeBot();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, this);
 
         jewelFlipped = false;
         orientationDetermined = false;

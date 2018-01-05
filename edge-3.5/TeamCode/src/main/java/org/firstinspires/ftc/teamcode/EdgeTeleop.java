@@ -17,7 +17,7 @@ public class EdgeTeleop extends LinearOpMode {
     public void runOpMode() {
         // Initializing the hardware object
         robot = new EdgeBot();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, this);
 
         // Wait for the driver to press play
         waitForStart();

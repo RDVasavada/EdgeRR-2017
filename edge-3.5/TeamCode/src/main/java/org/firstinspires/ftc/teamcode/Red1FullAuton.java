@@ -36,7 +36,7 @@ public class Red1FullAuton extends LinearOpMode {
     public void runOpMode() {
         // Initialize the hardware object
         robot = new EdgeBot();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, this);
 
         jewelFlipped = false;
         orientationDetermined = false;
@@ -118,12 +118,12 @@ public class Red1FullAuton extends LinearOpMode {
                 // Keep the arm in place for two seconds
                 robot.waitForTick(1000);
 
-                // Return the servos to their original position
-                robot.resetJewelServos();
-
                 jewelFlipped = true;
             }
         }
+
+        // Return the servos to their original position
+        robot.resetJewelServos();
 
         // Use vuforia to determine the block position
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -145,7 +145,9 @@ public class Red1FullAuton extends LinearOpMode {
 
         relicTrackables.activate();
 
-        while (opModeIsActive() && !pictographScanned) {
+        period.reset();
+
+        while (opModeIsActive() && !pictographScanned && period.seconds() < 5) {
             /* This checks to see if a pictograph is visible and
             returns an enum type that can be UNKNOWN, LEFT, or RIGHT */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -155,6 +157,9 @@ public class Red1FullAuton extends LinearOpMode {
                 column = vuMark;
                 pictographScanned = true;
             }
+
+            telemetry.addData("Pictograph visible: ", vuMark);
+            telemetry.update();
         }
 
         // Deliver the block
@@ -175,11 +180,26 @@ public class Red1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(44.8, 0.4);
-        } else if (column == RelicRecoveryVuMark.CENTER) {
-            robot.driveForwardForInches(35, 0.4);
+            robot.driveForwardForInches(41.5, 0.4);
+        } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
+            robot.driveForwardForInches(34, 0.4);
+
+            // Correct using the distance sensor
+            /*
+            double distance = robot.getRangeSensorDistance();
+            double error = distance - 50.2;
+
+            if (error > 1) {
+                robot.driveBackwardForInches(error, 0.4);
+            } else if (error < -1) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+            }
+
+            telemetry.addData("Correction: ", error);
+            telemetry.update();
+            */
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(28.5, 0.4);
+            robot.driveForwardForInches(27.5, 0.4);
         }
 
         robot.waitForTick(100);

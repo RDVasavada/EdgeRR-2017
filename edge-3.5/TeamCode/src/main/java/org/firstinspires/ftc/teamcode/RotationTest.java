@@ -18,7 +18,7 @@ public class RotationTest extends LinearOpMode {
     public void runOpMode() {
         // Initialize the hardware object
         robot = new EdgeBot();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, this);
 
         timer = new ElapsedTime();
 

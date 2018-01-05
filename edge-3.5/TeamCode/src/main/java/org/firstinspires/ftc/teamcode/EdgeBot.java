@@ -4,6 +4,9 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class EdgeBot {
@@ -54,12 +58,12 @@ public class EdgeBot {
     // Declare imu (inertial motion unit)
     public BNO055IMU imu = null;
 
+    // Declare distance sensor
+    public ModernRoboticsI2cRangeSensor distanceSensor = null;
+
     // Declare color sensors
     public ColorSensor leftColorSensor = null;
     public ColorSensor rightColorSensor = null;
-
-    // Declare distance sensor
-    public ModernRoboticsI2cRangeSensor distanceSensor = null;
 
     // Declare color sensor LEDs
     public DigitalChannel leftLED = null;
@@ -69,14 +73,19 @@ public class EdgeBot {
     private HardwareMap hMap;
     private ElapsedTime localPeriod = new ElapsedTime();
 
+    // A reference to the current opMode
+    public LinearOpMode currentOpmode;
+
     // Constructor
     public EdgeBot() {
 
     }
 
     // Initializes the hardware interfaces -- ONLY call this in runOpMode()
-    public void init(HardwareMap map) {
+    public void init(HardwareMap map, LinearOpMode opMode) {
         this.hMap = map;
+
+        currentOpmode = opMode;
 
         // Initialize the drive motors
         frontLeftMotor = hMap.dcMotor.get("frontleft");
@@ -122,6 +131,9 @@ public class EdgeBot {
         parameters.loggingTag = "IMU";
 
         imu.initialize(parameters);
+
+        // Initialize the distance sensor
+        distanceSensor = hMap.get(ModernRoboticsI2cRangeSensor.class, "distance");
 
         // Initialize the color sensors
         leftColorSensor = hMap.colorSensor.get("colorleft");
@@ -238,7 +250,7 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy() && currentOpmode.opModeIsActive()) {
             waitForTick(50);
         }
 
@@ -275,7 +287,7 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy() && currentOpmode.opModeIsActive()) {
             waitForTick(50);
         }
 
@@ -350,108 +362,10 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(speed);
     }
 
-    // Rotate counterclockwise by a given amount and at a given speed with using encoders and gyro correction (IN PROGRESS)
-    public void rotateCounterClockwiseEncoder2(int targetDegrees, double speed, Telemetry telemetry) {
-        // Adjust the degrees to rotate
-        int degreesToRotate = targetDegrees - 20;
-
-        int numberOfSteps = (4000 / (360 / degreesToRotate));
-
-        rotateCounterClockwise(0.05);
-        waitForTick(100);
-        stopDriveMotors();
-
-        // Record initial heading
-        float initialHeading = getCounterClockwiseGyroHeading();
-
-        if (initialHeading > 180) {
-            initialHeading -= 360;
-        }
-
-        // Reset the encoders and set mode
-        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        waitForTick(50);
-
-        setDriveMotorsRunToPosition();
-
-        waitForTick(50);
-
-        int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
-        int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
-        int rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
-        int rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
-
-        // Set target steps
-        frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
-        frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
-        rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
-        rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
-
-        waitForTick(50);
-
-        setDriveMotorsToCommonSpeed(speed);
-
-        // Keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
-            waitForTick(50);
-        }
-
-        // Correct based on the gyro
-        float finalHeading = getCounterClockwiseGyroHeading();
-        float degreesRotated = getCounterClockwiseGyroHeading() - initialHeading;
-        float degreesLeft = targetDegrees - degreesRotated;
-
-        // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 5) {
-            numberOfSteps = Math.round(4000 / (360 / degreesLeft));
-
-            telemetry.addData("Initial heading", initialHeading);
-            telemetry.addData("Final heading", finalHeading);
-            telemetry.addData("Degrees rotated", degreesRotated);
-            telemetry.addData("Correction", degreesLeft);
-            telemetry.addData("Number of steps", numberOfSteps);
-            telemetry.update();
-
-            //waitForTick(4000);
-
-            frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
-            frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
-            rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
-            rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
-
-            // Set target steps
-            frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
-            frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
-            rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
-            rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
-
-            frontRightMotor.setPower(speed);
-            frontLeftMotor.setPower(speed);
-            rearRightMotor.setPower(speed);
-            rearLeftMotor.setPower(speed);
-
-            // Keep looping while we are still active, and there is time left, and both motors are running.
-            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy()) {
-                waitForTick(50);
-            }
-
-            finalHeading = getCounterClockwiseGyroHeading();
-            degreesRotated = getCounterClockwiseGyroHeading() - initialHeading;
-            degreesLeft = targetDegrees - degreesRotated;
-        }
-
-        stopDriveMotors();
-
-        setDriveMotorsRunUsingEncoders();
-    }
-
     // Rotate counterclockwise by a given amount and at a given speed with using encoders and gyro correction
     public void rotateCounterClockwiseEncoder(int targetDegrees, double speed, Telemetry telemetry) {
         // Adjust the degrees to rotate
+        //Undershoot and use the gyro to go the rest of the way
         int degreesToRotate = targetDegrees - 20;
 
         int numberOfSteps = (4000 / (360 / degreesToRotate));
@@ -461,8 +375,7 @@ public class EdgeBot {
         stopDriveMotors();
 
         // Record initial heading
-        Orientation initialAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float initialHeading = initialAngles.firstAngle;
+        float initialHeading = getRawGyroHeading();
 
         // Reset the encoders and set mode
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -492,18 +405,31 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(speed);
 
         // Keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy() && currentOpmode.opModeIsActive()) {
             waitForTick(50);
         }
 
         // Correct based on the gyro
-        Orientation finalAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float finalHeading = finalAngles.firstAngle;
-        float degreesRotated = finalHeading - initialHeading;
+        float finalHeading = getRawGyroHeading();
+
+        /*
+        Since counterclockwise on the gyro is positive, rotating counterclockwise should always increase the heading
+        However, if you cross the 180 mark, the sign will flip to a negative value
+        The negative value represents the degrees rotated clockwise from the gyro's initial position
+        Therefore, the adjusted heading is 360 (which represents a full counterclockwise rotation)
+        minus the degrees clockwise from the initial position
+        We check to see if finalHeading < initialHeading because that condition will only occur when crossing the 180 mark
+         */
+
+        if (finalHeading < initialHeading) {
+            finalHeading = 360 - Math.abs(finalHeading);
+        }
+
+        float degreesRotated = Math.abs(finalHeading - initialHeading);
         float degreesLeft = targetDegrees - degreesRotated;
 
         // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 5) {
+        while (Math.abs(degreesLeft) > 5 && currentOpmode.opModeIsActive()) {
             numberOfSteps = Math.round(4000 / (360 / degreesLeft));
 
             telemetry.addData("Initial heading", initialHeading);
@@ -532,13 +458,17 @@ public class EdgeBot {
             rearLeftMotor.setPower(speed);
 
             // Keep looping while we are still active, and there is time left, and both motors are running.
-            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy()) {
+            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy() && currentOpmode.opModeIsActive()) {
                 waitForTick(50);
             }
 
-            finalAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            finalHeading = finalAngles.firstAngle;
-            degreesRotated = finalHeading - initialHeading;
+            finalHeading = getRawGyroHeading();
+
+            if (finalHeading < initialHeading) {
+                finalHeading = 360 - Math.abs(finalHeading);
+            }
+
+            degreesRotated = Math.abs(finalHeading - initialHeading);
             degreesLeft = targetDegrees - degreesRotated;
         }
 
@@ -550,6 +480,7 @@ public class EdgeBot {
     // Rotate clockwise by a given amount and at a given speed with using encoders and gyro correction
     public void rotateClockwiseEncoder(int targetDegrees, double speed, Telemetry telemetry) {
         // Adjust the degrees to rotate
+        // Undershoot and use the gyro to go the rest of the way
         int degreesToRotate = targetDegrees - 20;
 
         int numberOfSteps = (4000 / (360 / degreesToRotate));
@@ -559,8 +490,7 @@ public class EdgeBot {
         stopDriveMotors();
 
         // Record initial heading
-        Orientation initialAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float initialHeading = initialAngles.firstAngle;
+        float initialHeading = getRawGyroHeading();
 
         // Reset the encoders and set mode
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -590,18 +520,31 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(speed);
 
         // Keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy() && currentOpmode.opModeIsActive()) {
             waitForTick(50);
         }
 
         // Correct based on the gyro
-        Orientation finalAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float finalHeading = finalAngles.firstAngle;
+        float finalHeading = getRawGyroHeading();
+
+        /*
+        Since clockwise on the gyro is negative, rotating clockwise should always decrease the heading
+        However, if you cross the 180 mark, the sign will flip to a positive value
+        The positive value represents the degrees rotated counterclockwise from the gyro's initial position
+        Therefore, the adjusted heading is negative 360 (which represents a full clockwise rotation)
+        plus the degrees counterclockwise from the initial position
+        We check to see if finalHeading > initialHeading because that condition will only occur when crossing the 180 mark
+         */
+
+        if (finalHeading > initialHeading) {
+            finalHeading -= 360;
+        }
+
         float degreesRotated = Math.abs(finalHeading - initialHeading);
         float degreesLeft = targetDegrees - degreesRotated;
 
         // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 5) {
+        while (Math.abs(degreesLeft) > 5 && currentOpmode.opModeIsActive()) {
             numberOfSteps = Math.round(4000 / (360 / degreesLeft));
 
             telemetry.addData("Initial heading", initialHeading);
@@ -628,151 +571,18 @@ public class EdgeBot {
             rearLeftMotor.setPower(speed);
 
             // Keep looping while we are still active, and there is time left, and both motors are running.
-            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy()) {
+            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy() && currentOpmode.opModeIsActive()) {
                 waitForTick(50);
             }
 
-            finalAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            finalHeading = finalAngles.firstAngle;
+            finalHeading = getRawGyroHeading();
+
+            if (finalHeading > initialHeading) {
+                finalHeading -= 360;
+            }
+
             degreesRotated = Math.abs(finalHeading - initialHeading);
             degreesLeft = targetDegrees - degreesRotated;
-        }
-
-        stopDriveMotors();
-
-        setDriveMotorsRunUsingEncoders();
-    }
-
-    // Rotate clockwise by a given amount and at a given speed with using encoders and gyro correction (IN PROGRESS)
-    public void rotateClockwiseEncoder2(int targetDegrees, double speed, Telemetry telemetry) {
-        // Adjust the degrees to rotate
-        int degreesToRotate = targetDegrees - 20;
-
-        int numberOfSteps = (4000 / (360 / degreesToRotate));
-
-        rotateClockwise(0.05);
-        waitForTick(100);
-        stopDriveMotors();
-
-        // Record initial heading
-        float initialHeading = getClockwiseGyroHeading();
-
-        if (initialHeading > 180) {
-            initialHeading -= 360;
-        }
-
-        // Reset the encoders and set mode
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        waitForTick(50);
-
-        setDriveMotorsRunToPosition();
-
-        waitForTick(50);
-
-        int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
-        int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
-        int rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
-        int rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
-
-        // Set target steps
-        frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
-        frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
-        rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
-        rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
-
-        waitForTick(50);
-
-        setDriveMotorsToCommonSpeed(speed);
-
-        // Keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
-            waitForTick(50);
-        }
-
-        // Correct based on the gyro
-        float finalHeading = getClockwiseGyroHeading();
-        float degreesRotated = finalHeading - initialHeading;
-        float degreesLeft = targetDegrees - degreesRotated;
-
-        // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 5) {
-            numberOfSteps = Math.round(4000 / (360 / degreesLeft));
-
-            telemetry.addData("Initial heading", initialHeading);
-            telemetry.addData("Final heading", finalHeading);
-            telemetry.addData("Degrees rotated", degreesRotated);
-            telemetry.addData("Correction", degreesLeft);
-            telemetry.addData("Number of steps", numberOfSteps);
-            telemetry.update();
-
-            frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() - numberOfSteps;
-            frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() - numberOfSteps;
-            rearRightMotorStepsToDo = rearRightMotor.getCurrentPosition() - numberOfSteps;
-            rearLeftMotorStepsToDo = rearLeftMotor.getCurrentPosition() - numberOfSteps;
-
-            // Set target steps
-            frontRightMotor.setTargetPosition(frontRightMotorStepsToDo);
-            frontLeftMotor.setTargetPosition(frontLeftMotorStepsToDo);
-            rearRightMotor.setTargetPosition(rearRightMotorStepsToDo);
-            rearLeftMotor.setTargetPosition(rearLeftMotorStepsToDo);
-
-            frontRightMotor.setPower(speed);
-            frontLeftMotor.setPower(speed);
-            rearRightMotor.setPower(speed);
-            rearLeftMotor.setPower(speed);
-
-            // Keep looping while we are still active, and there is time left, and both motors are running.
-            while (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && rearLeftMotor.isBusy() && rearRightMotor.isBusy()) {
-                waitForTick(50);
-            }
-
-            finalHeading = getClockwiseGyroHeading();
-            degreesRotated = finalHeading - initialHeading;
-            degreesLeft = targetDegrees - degreesRotated;
-        }
-
-        stopDriveMotors();
-
-        setDriveMotorsRunUsingEncoders();
-    }
-
-    // Rotate clockwise by a given amount and at a given speed with using  gyro correction (IN PROGRESS)
-    public void rotateToGyroHeading(float targetDegrees, double speed, Telemetry telemetry, RotationTest sender) {
-        // Stop the drive motors
-        setDriveMotorsRunUsingEncoders();
-
-        rotateClockwise(0.05);
-        waitForTick(100);
-        stopDriveMotors();
-
-        // Record initial heading
-        Orientation initialAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float initialHeading = initialAngles.firstAngle;
-
-        // Set target heading
-        float targetHeading = initialHeading + targetDegrees;
-
-        waitForTick(50);
-
-        rotateClockwise(speed);
-
-        boolean finishedRotating = false;
-
-        // Loop until we are within 2 degrees of the target heading
-        while (!finishedRotating && sender.opModeIsActive()) {
-            // Correct based on the gyro
-            Orientation currentAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            float currentHeading = currentAngles.firstAngle;
-
-            float error = Math.abs(targetHeading - currentHeading);
-
-            if (error < 2) {
-                finishedRotating = true;
-            }
         }
 
         stopDriveMotors();
@@ -816,7 +626,7 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(Math.abs(speed));
 
         // Keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy() && currentOpmode.opModeIsActive()) {
             waitForTick(50);
         }
 
@@ -865,7 +675,7 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(Math.abs(speed));
 
         // Keep looping while we are still active, and there is time left, and both motors are running.
-        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy()) {
+        while (frontRightMotor.isBusy() && frontLeftMotor.isBusy() && rearRightMotor.isBusy() && rearLeftMotor.isBusy() && currentOpmode.opModeIsActive()) {
             waitForTick(50);
         }
 
@@ -915,11 +725,11 @@ public class EdgeBot {
     // Lower jewel arm
     public void lowerJewelArm() {
         jewelLiftServo.setPosition(0.7);
-        waitForTick(500);
+        waitForTick(400);
         jewelLiftServo.setPosition(0.5);
-        waitForTick(500);
+        waitForTick(400);
         jewelLiftServo.setPosition(0.4);
-        waitForTick(500);
+        waitForTick(400);
         jewelLiftServo.setPosition(0.35);
     }
 
@@ -1004,6 +814,12 @@ public class EdgeBot {
         clawPinchServo.setPosition(1);
     }
 
+    // Get the raw gyro heading
+    public float getRawGyroHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
     // Get the gyro heading with counterclockwise as positive
     public float getCounterClockwiseGyroHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -1023,7 +839,7 @@ public class EdgeBot {
         return convertedAngle;
     }
 
-    // Get the gyro heading with clockwise and positive
+    // Get the gyro heading with clockwise ans positive
     public float getClockwiseGyroHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         float rawAngle = angles.firstAngle;
@@ -1040,6 +856,11 @@ public class EdgeBot {
         }
 
         return convertedAngle;
+    }
+
+    // Return the range sensor's distance (in inches)
+    public double getRangeSensorDistance() {
+        return distanceSensor.getDistance(DistanceUnit.INCH);
     }
 
     // Displays RGB info from the color sensors

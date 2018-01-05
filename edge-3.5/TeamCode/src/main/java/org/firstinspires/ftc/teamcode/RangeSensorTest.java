@@ -65,7 +65,7 @@ public class RangeSensorTest extends LinearOpMode {
             telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
             telemetry.addData("raw optical", rangeSensor.rawOptical());
             telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
-            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("inch", "%.2f inch", rangeSensor.getDistance(DistanceUnit.INCH));
             telemetry.update();
         }
     }

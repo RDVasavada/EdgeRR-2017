@@ -36,7 +36,7 @@ public class Blue1FullAuton extends LinearOpMode {
     public void runOpMode() {
         // Initialize the hardware object
         robot = new EdgeBot();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, this);
 
         jewelFlipped = false;
         orientationDetermined = false;
@@ -80,26 +80,13 @@ public class Blue1FullAuton extends LinearOpMode {
                 boolean rightSensorRed = ((rightHue > Constants.RED_LOW_1) && (rightHue < Constants.RED_HIGH_1)) || ((rightHue > Constants.RED_LOW_2) && (rightHue < Constants.RED_HIGH_2));
                 boolean rightSensorBlue = (rightHue > Constants.BLUE_LOW) && (rightHue < Constants.BLUE_HIGH);
 
-                if (period.seconds() < 5) {
-                    // Check if both sensors have determined a color
-                    if (leftSensorRed && rightSensorBlue) {
-                        redOnLeft = true;
-                        orientationDetermined = true;
-                    } else if (leftSensorBlue && rightSensorRed) {
-                        redOnLeft = false;
-                        orientationDetermined = true;
-                    }
-
-                    telemetry.addData("Verifying ", "both colors");
-                } else {
-                    // Check if one sensor has determined a color
-                    if ((leftSensorRed && !rightSensorRed) || (!leftSensorBlue && rightSensorBlue)) {
-                        redOnLeft = true;
-                        orientationDetermined = true;
-                    } else if ((!leftSensorRed && rightSensorRed) || (leftSensorBlue && !rightSensorBlue)) {
-                        redOnLeft = false;
-                        orientationDetermined = true;
-                    }
+                // Check if one sensor has determined a color
+                if ((leftSensorRed && !rightSensorRed) || (!leftSensorBlue && rightSensorBlue)) {
+                    redOnLeft = true;
+                    orientationDetermined = true;
+                } else if ((!leftSensorRed && rightSensorRed) || (leftSensorBlue && !rightSensorBlue)) {
+                    redOnLeft = false;
+                    orientationDetermined = true;
                 }
 
                 telemetry.update();
@@ -131,12 +118,12 @@ public class Blue1FullAuton extends LinearOpMode {
                 // Keep the arm in place for two seconds
                 robot.waitForTick(1000);
 
-                // Return the servos to their original position
-                robot.resetJewelServos();
-
                 jewelFlipped = true;
             }
         }
+
+        // Return the servos to their original position
+        robot.resetJewelServos();
 
         // Use vuforia to determine the block position
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -158,7 +145,9 @@ public class Blue1FullAuton extends LinearOpMode {
 
         relicTrackables.activate();
 
-        while (opModeIsActive() && !pictographScanned) {
+        period.reset();
+
+        while (opModeIsActive() && !pictographScanned && period.seconds() < 5) {
             /* This checks to see if a pictograph is visible and
             returns an enum type that can be UNKNOWN, LEFT, or RIGHT */
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -168,6 +157,9 @@ public class Blue1FullAuton extends LinearOpMode {
                 column = vuMark;
                 pictographScanned = true;
             }
+
+            telemetry.addData("Pictograph visible: ", vuMark);
+            telemetry.update();
         }
 
         // Deliver the block
@@ -188,8 +180,8 @@ public class Blue1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveBackwardForSteps(925, 0.4);
-        } else if (column == RelicRecoveryVuMark.CENTER) {
+            robot.driveBackwardForInches(24, 0.4);
+        } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
             robot.driveBackwardForSteps(1175, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
             robot.driveBackwardForSteps(1625, 0.4);
