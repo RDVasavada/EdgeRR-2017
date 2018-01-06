@@ -177,22 +177,61 @@ public class Red2FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveForwardForInches(21.8, 0.5);
+        robot.driveForwardForInches(29, 0.5);
 
         robot.waitForTick(100);
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(30.8, 0.4);
+            robot.driveForwardForInches(24, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 31;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+            }
+
+            telemetry.addData("Correction: ", error);
+            telemetry.update();
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(17.3, 0.4);
+            robot.driveForwardForInches(12.5, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 23.5;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+            }
+
+            telemetry.addData("Correction: ", error);
+            telemetry.update();
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(7.7, 0.4);
+            robot.driveForwardForInches(6, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 17;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+            }
+
+            telemetry.addData("Correction: ", error);
+            telemetry.update();
         }
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(5.1, 0.2);
+        robot.driveForwardForInches(7, 0.2);
 
         robot.waitForTick(50);
 

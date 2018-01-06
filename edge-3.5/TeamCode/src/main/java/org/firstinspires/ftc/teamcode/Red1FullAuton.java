@@ -180,9 +180,9 @@ public class Red1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(41.5, 0.4);
+            robot.driveForwardForInches(46.5, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(34, 0.4);
+            robot.driveForwardForInches(36, 0.4);
 
             // Correct using the distance sensor
             /*
@@ -205,7 +205,7 @@ public class Red1FullAuton extends LinearOpMode {
         robot.waitForTick(100);
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(5.6, 0.2);
+        robot.driveForwardForInches(7.6, 0.2);
 
         robot.waitForTick(50);
 

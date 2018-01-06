@@ -177,22 +177,22 @@ public class Blue2FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveBackwardForSteps(1150, 0.5);
+        robot.driveBackwardForInches(28, 0.4);
 
         robot.waitForTick(100);
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(12.8, 0.4);
+            robot.driveForwardForInches(7.8, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(19.8, 0.4);
+            robot.driveForwardForInches(15.8, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(26.8, 0.4);
+            robot.driveForwardForInches(23.8, 0.4);
         }
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForSteps(200, 0.2);
+        robot.driveForwardForInches(6, 0.2);
 
         robot.waitForTick(50);
 
