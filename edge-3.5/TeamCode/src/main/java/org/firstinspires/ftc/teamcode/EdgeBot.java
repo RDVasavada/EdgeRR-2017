@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -72,6 +73,9 @@ public class EdgeBot {
     // Local OpMode members
     private HardwareMap hMap;
     private ElapsedTime localPeriod = new ElapsedTime();
+
+    // Mecanum drive correction
+    private double mecanumRotationCorrection = 0;
 
     // A reference to the current opMode
     public LinearOpMode currentOpmode;
@@ -222,6 +226,63 @@ public class EdgeBot {
                 .addData("Rear right", rearRight);
 
         telemetry.addData("Heading", heading);
+    }
+
+    public void mecanumDrive2(double strafe, double forward, double rotation) {
+        // Set motor directions
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        setDriveMotorsRunUsingEncoders();
+
+        double frontLeft;
+        double frontRight;
+        double rearLeft;
+        double rearRight;
+
+        // Adjust rotation
+        if (rotation == 0) {
+            if (Math.abs(getAngularVelocity()) > 2) {
+                mecanumRotationCorrection -= getAngularVelocity() / 180;
+            } else {
+                mecanumRotationCorrection = 0;
+            }
+
+            rotation += mecanumRotationCorrection;
+        }
+
+        // Calculate motor powers
+        if (forward >= strafe) {
+            frontLeft = forward + rotation;
+            frontRight = forward - rotation;
+            rearLeft = forward + rotation;
+            rearRight = forward - rotation;
+        } else {
+            frontLeft = strafe;
+            frontRight = -strafe;
+            rearLeft = -strafe;
+            rearRight = strafe;
+        }
+
+        // Scale the motor powers with 1 as the max
+        double max1 = Math.max(Math.abs(frontLeft), Math.abs(frontRight));
+        double max2 = Math.max(Math.abs(rearLeft), Math.abs(rearRight));
+        double maxValue = Math.max(max1, max2);
+
+        if (maxValue > 1.0) {
+            frontLeft /= maxValue;
+            frontRight /= maxValue;
+            rearLeft /= maxValue;
+            rearRight /= maxValue;
+        }
+
+        // Set the motors to the calculated powers
+        frontLeftMotor.setPower(frontLeft);
+        frontRightMotor.setPower(frontRight);
+        rearLeftMotor.setPower(rearLeft);
+        rearRightMotor.setPower(rearRight);
     }
 
     public void driveBackwardForSteps(int numberOfSteps, double speed) {
@@ -812,48 +873,16 @@ public class EdgeBot {
         clawPinchServo.setPosition(1);
     }
 
-    // Get the raw gyro heading
+    // Get the raw gyro heading in degrees
     public float getRawGyroHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }
 
-    // Get the gyro heading with counterclockwise as positive
-    public float getCounterClockwiseGyroHeading() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float rawAngle = angles.firstAngle;
-        /*
-        The gyro returns clockwise values as negative from 0 to -180, and counterclockwise as 0 to 180
-        Therefore, we have to convert to standard 0-360 values with counterclockwise as positive
-         */
-        float convertedAngle;
-
-        if (rawAngle < 0) {
-            convertedAngle = 360 + rawAngle;
-        } else {
-            convertedAngle = rawAngle;
-        }
-
-        return convertedAngle;
-    }
-
-    // Get the gyro heading with clockwise ans positive
-    public float getClockwiseGyroHeading() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        float rawAngle = angles.firstAngle;
-        /*
-        The gyro returns clockwise values as negative from 0 to -180, and counterclockwise as 0 to 180
-        Therefore, we have to convert to standard 0-360 values with clockwise as positive
-         */
-        float convertedAngle;
-
-        if (rawAngle < 0) {
-            convertedAngle = rawAngle * -1;
-        } else {
-            convertedAngle = 360 - rawAngle;
-        }
-
-        return convertedAngle;
+    // Get the gyro's angular velocity in degrees
+    public float getAngularVelocity() {
+        AngularVelocity rotateRate = imu.getAngularVelocity().toAngleUnit(AngleUnit.DEGREES);
+        return rotateRate.zRotationRate;
     }
 
     // Return the range sensor's distance (in inches)
