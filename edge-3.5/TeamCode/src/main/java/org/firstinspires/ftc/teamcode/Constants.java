@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 public class Constants {
     // Motor speed constants
-    public static final double CRANE_SPEED = 0.4;
+    public static final double CRANE_SPEED = 0.8;
 
     // Color sensor ranges
     public static final double RED_LOW_1 = 0.1;

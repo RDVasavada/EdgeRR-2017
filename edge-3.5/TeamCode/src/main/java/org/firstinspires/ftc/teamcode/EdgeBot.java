@@ -729,8 +729,6 @@ public class EdgeBot {
         jewelLiftServo.setPosition(0.5);
         waitForTick(400);
         jewelLiftServo.setPosition(0.4);
-        waitForTick(400);
-        jewelLiftServo.setPosition(0.35);
     }
 
     public void jewelFlipLeft() {
