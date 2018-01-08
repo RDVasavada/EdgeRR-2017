@@ -228,7 +228,7 @@ public class EdgeBot {
         telemetry.addData("Heading", heading);
     }
 
-    public void mecanumDrive2(double strafe, double forward, double rotation) {
+    public void mecanumDrive2(double strafe, double forward, double rotation, double constant) {
         // Set motor directions
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -245,7 +245,7 @@ public class EdgeBot {
         // Adjust rotation
         if (rotation == 0) {
             if (Math.abs(getAngularVelocity()) > 2) {
-                mecanumRotationCorrection -= getAngularVelocity() / 180;
+                mecanumRotationCorrection -= getAngularVelocity() / constant;
             } else {
                 mecanumRotationCorrection = 0;
             }
@@ -490,7 +490,7 @@ public class EdgeBot {
         float degreesLeft = targetDegrees - degreesRotated;
 
         // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 5 && currentOpmode.opModeIsActive()) {
+        while (Math.abs(degreesLeft) > 3 && currentOpmode.opModeIsActive()) {
             numberOfSteps = Math.round(4000 / (360 / degreesLeft));
 
             telemetry.addData("Initial heading", initialHeading);
@@ -605,7 +605,7 @@ public class EdgeBot {
         float degreesLeft = targetDegrees - degreesRotated;
 
         // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 5 && currentOpmode.opModeIsActive()) {
+        while (Math.abs(degreesLeft) > 3 && currentOpmode.opModeIsActive()) {
             numberOfSteps = Math.round(4000 / (360 / degreesLeft));
 
             telemetry.addData("Initial heading", initialHeading);
