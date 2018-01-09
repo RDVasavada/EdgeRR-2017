@@ -652,7 +652,7 @@ public class EdgeBot {
     }
 
     // Strafe left with encoders and gyro correction
-    public void autoStrafeLeft(int numberOfSteps, double speed)// KT: Made lots of changes!
+    public void autoStrafeLeft(int numberOfSteps, double speed, Telemetry telemetry)
     {
         // Set the motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -662,6 +662,9 @@ public class EdgeBot {
 
         waitForTick(40);
 
+        // Record initial heading
+        float initialHeading = getRawGyroHeading();
+
         // Define step counts
         int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() + numberOfSteps;
         int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() + numberOfSteps;
@@ -696,12 +699,33 @@ public class EdgeBot {
 
         waitForTick(40);
 
+        // Correct based on the gyro
+        float finalHeading = getRawGyroHeading();
+        int rotation = Math.round(finalHeading - initialHeading);
+
+        // Rotate based on the error
+        if (rotation > 4 && rotation < 180) {
+            rotateClockwiseEncoder(Math.abs(rotation), 0.3, telemetry);
+        } else if (rotation < -4 && rotation > -180) {
+            rotateCounterClockwiseEncoder(Math.abs(rotation), 0.3, telemetry);
+        } else if (rotation > 180) {
+            int adjustedRotation = 360 - rotation;
+            if (adjustedRotation > 4) {
+                rotateCounterClockwiseEncoder(adjustedRotation, 0.3, telemetry);
+            }
+        } else if (rotation < -180) {
+            int adjustedRotation = 360 + rotation;
+            if (adjustedRotation > 4) {
+                rotateClockwiseEncoder(adjustedRotation, 0.3, telemetry);
+            }
+        }
+
         // Turn off run to position
         setDriveMotorsRunUsingEncoders();
     }
 
     // Strafe right with encoders and gyro correction
-    public void autoStrafeRight(int numberOfSteps, double speed)// KT: Made lots of changes!
+    public void autoStrafeRight(int numberOfSteps, double speed, Telemetry telemetry)
     {
         // Set the motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -711,6 +735,9 @@ public class EdgeBot {
 
         waitForTick(40);
 
+        // Record initial heading
+        float initialHeading = getRawGyroHeading();
+
         // Define step counts
         int frontRightMotorStepsToDo = frontRightMotor.getCurrentPosition() + numberOfSteps;
         int frontLeftMotorStepsToDo = frontLeftMotor.getCurrentPosition() + numberOfSteps;
@@ -744,6 +771,27 @@ public class EdgeBot {
         setDriveMotorsToCommonSpeed(0);
 
         waitForTick(40);
+
+        // Correct based on the gyro
+        float finalHeading = getRawGyroHeading();
+        int rotation = Math.round(finalHeading - initialHeading);
+
+        // Rotate based on the error
+        if (rotation > 4 && rotation < 180) {
+            rotateClockwiseEncoder(Math.abs(rotation), 0.3, telemetry);
+        } else if (rotation < -4 && rotation > -180) {
+            rotateCounterClockwiseEncoder(Math.abs(rotation), 0.3, telemetry);
+        } else if (rotation > 180) {
+            int adjustedRotation = 360 - rotation;
+            if (adjustedRotation > 4) {
+                rotateCounterClockwiseEncoder(adjustedRotation, 0.3, telemetry);
+            }
+        } else if (rotation < -180) {
+            int adjustedRotation = 360 + rotation;
+            if (adjustedRotation > 4) {
+                rotateClockwiseEncoder(adjustedRotation, 0.3, telemetry);
+            }
+        }
 
         // Turn off run to position
         setDriveMotorsRunUsingEncoders();
