@@ -182,7 +182,7 @@ public class Blue1FullAuton extends LinearOpMode {
         if (column == RelicRecoveryVuMark.LEFT) {
             robot.driveBackwardForInches(24, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveBackwardForInches(33.5, 0.4);
+            robot.driveBackwardForInches(33.7, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
             robot.driveBackwardForInches(43, 0.4);
         }
@@ -190,14 +190,11 @@ public class Blue1FullAuton extends LinearOpMode {
         robot.waitForTick(100);
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(7, 0.2);
 
         robot.waitForTick(50);
 
         robot.openClampServos();
-
-        robot.waitForTick(500);
-
-        robot.driveBackwardForSteps(100, 0.3);
+        robot.driveForwardForInches(7, 0.2);
+        robot.driveBackwardForInches(1.5, 0.2);
     }
 }

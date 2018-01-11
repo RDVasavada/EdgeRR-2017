@@ -182,22 +182,7 @@ public class Red1FullAuton extends LinearOpMode {
         if (column == RelicRecoveryVuMark.LEFT) {
             robot.driveForwardForInches(46.5, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(36, 0.4);
-
-            // Correct using the distance sensor
-            /*
-            double distance = robot.getRangeSensorDistance();
-            double error = distance - 50.2;
-
-            if (error > 1) {
-                robot.driveBackwardForInches(error, 0.4);
-            } else if (error < -1) {
-                robot.driveForwardForInches(Math.abs(error), 0.4);
-            }
-
-            telemetry.addData("Correction: ", error);
-            telemetry.update();
-            */
+            robot.driveForwardForInches(36.5, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
             robot.driveForwardForInches(27.5, 0.4);
         }
@@ -205,14 +190,12 @@ public class Red1FullAuton extends LinearOpMode {
         robot.waitForTick(100);
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(7.6, 0.2);
+        robot.driveForwardForInches(2, 0.2);
 
         robot.waitForTick(50);
 
         robot.openClampServos();
-
-        robot.waitForTick(500);
-
-        robot.driveBackwardForInches(2.6, 0.3);
+        robot.driveForwardForInches(6, 0.2);
+        robot.driveBackwardForInches(1.5, 0.2);
     }
 }

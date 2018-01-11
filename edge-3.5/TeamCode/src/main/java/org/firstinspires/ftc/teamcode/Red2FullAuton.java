@@ -177,14 +177,14 @@ public class Red2FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveForwardForInches(29, 0.5);
+        robot.driveForwardForInches(29, 0.4);
 
         robot.waitForTick(100);
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(24, 0.4);
+            robot.driveForwardForInches(23, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
@@ -192,29 +192,31 @@ public class Red2FullAuton extends LinearOpMode {
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
             } else if (error < -1 && error > -4) {
                 robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
             }
 
-            telemetry.addData("Correction: ", error);
             telemetry.update();
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(12.5, 0.4);
+            robot.driveForwardForInches(13, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 23.5;
+            double error = distance - 22.5;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
             } else if (error < -1 && error > -4) {
                 robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
             }
 
-            telemetry.addData("Correction: ", error);
             telemetry.update();
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(6, 0.4);
+            robot.driveForwardForInches(8, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
@@ -222,23 +224,22 @@ public class Red2FullAuton extends LinearOpMode {
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
             } else if (error < -1 && error > -4) {
                 robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
             }
 
-            telemetry.addData("Correction: ", error);
             telemetry.update();
         }
 
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(7, 0.2);
+        robot.driveForwardForInches(3, 0.2);
 
         robot.waitForTick(50);
 
         robot.openClampServos();
-
-        robot.waitForTick(500);
-
-        robot.driveBackwardForInches(2.6, 0.3);
+        robot.driveForwardForInches(6, 0.2);
+        robot.driveBackwardForInches(1, 0.2);
     }
 }

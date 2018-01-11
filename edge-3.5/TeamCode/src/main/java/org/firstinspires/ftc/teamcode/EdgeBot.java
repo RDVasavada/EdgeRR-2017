@@ -74,9 +74,6 @@ public class EdgeBot {
     private HardwareMap hMap;
     private ElapsedTime localPeriod = new ElapsedTime();
 
-    // Mecanum drive correction
-    private double mecanumRotationCorrection = 0;
-
     // A reference to the current opMode
     public LinearOpMode currentOpmode;
 
@@ -181,54 +178,7 @@ public class EdgeBot {
     }
 
     // Converts joystick inputs to motor powers for mecanum wheels
-    public void mecanumDrive(double leftX, double leftY, double rightX, Telemetry telemetry) {
-        // Set motor directions
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        setDriveMotorsRunUsingEncoders();
-
-        // The vector sum of the x and y positions of the left joystick
-        double velocity = Math.min(Math.sqrt(Math.pow(leftX, 2) + Math.pow(leftY, 2)), 1);
-        double heading = Math.atan2(-leftX, leftY);
-        double turnVelocity = -rightX;
-
-        // Convert velocity and heading to motor powers
-        double frontLeft = velocity * Math.sin(-heading + Math.PI / 4) + turnVelocity;
-        double frontRight  = velocity * Math.cos(-heading + Math.PI / 4) - turnVelocity;
-        double rearLeft = velocity * Math.cos(-heading + Math.PI / 4) + turnVelocity;
-        double rearRight = velocity * Math.sin(-heading + Math.PI / 4) - turnVelocity;
-
-        // Scale the motor powers with 1 as the max
-        double max1 = Math.max(Math.abs(frontLeft), Math.abs(frontRight));
-        double max2 = Math.max(Math.abs(rearLeft), Math.abs(rearRight));
-        double maxValue = Math.max(max1, max2);
-
-        if (maxValue > 1.0) {
-            frontLeft /= maxValue;
-            frontRight /= maxValue;
-            rearLeft /= maxValue;
-            rearRight /= maxValue;
-        }
-
-        // Set the motors to the calculated powers
-        frontLeftMotor.setPower(frontLeft);
-        frontRightMotor.setPower(frontRight);
-        rearLeftMotor.setPower(rearLeft);
-        rearRightMotor.setPower(rearRight);
-
-        telemetry.addLine("Motor powers")
-                .addData("Front left", frontLeft)
-                .addData("Front right", frontRight)
-                .addData("Rear left", rearLeft)
-                .addData("Rear right", rearRight);
-
-        telemetry.addData("Heading", heading);
-    }
-
-    public void mecanumDrive2(double strafe, double forward, double rotation, double constant) {
+    public void mecanumDrive(double strafe, double forward, double rotation, Telemetry telemetry) {
         // Set motor directions
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -242,19 +192,12 @@ public class EdgeBot {
         double rearLeft;
         double rearRight;
 
-        // Adjust rotation
-        if (rotation == 0) {
-            if (Math.abs(getAngularVelocity()) > 2) {
-                mecanumRotationCorrection -= getAngularVelocity() / constant;
-            } else {
-                mecanumRotationCorrection = 0;
-            }
-
-            rotation += mecanumRotationCorrection;
-        }
+        // Adjust the forward and strafe to make right and up positive
+        forward *= -0.85;
+        strafe *= -1;
 
         // Calculate motor powers
-        if (forward >= strafe) {
+        if (Math.abs(forward) >= Math.abs(strafe)) {
             frontLeft = forward + rotation;
             frontRight = forward - rotation;
             rearLeft = forward + rotation;
@@ -283,6 +226,12 @@ public class EdgeBot {
         frontRightMotor.setPower(frontRight);
         rearLeftMotor.setPower(rearLeft);
         rearRightMotor.setPower(rearRight);
+
+        telemetry.addLine("Motor powers")
+                .addData("Front left", frontLeft)
+                .addData("Front right", frontRight)
+                .addData("Rear left", rearLeft)
+                .addData("Rear right", rearRight);
     }
 
     public void driveBackwardForSteps(int numberOfSteps, double speed) {
@@ -835,9 +784,9 @@ public class EdgeBot {
     public void lowerJewelArm() {
         jewelLiftServo.setPosition(0.7);
         waitForTick(400);
-        jewelLiftServo.setPosition(0.5);
+        jewelLiftServo.setPosition(0.55);
         waitForTick(400);
-        jewelLiftServo.setPosition(0.4);
+        jewelLiftServo.setPosition(0.415);
     }
 
     public void jewelFlipLeft() {
@@ -849,7 +798,7 @@ public class EdgeBot {
     }
 
     public void resetJewelServos() {
-        jewelLiftServo.setPosition(0.9);
+        jewelLiftServo.setPosition(0.85);
         jewelFlipServo.setPosition(0.5);
     }
 
@@ -925,12 +874,6 @@ public class EdgeBot {
     public float getRawGyroHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
-    }
-
-    // Get the gyro's angular velocity in degrees
-    public float getAngularVelocity() {
-        AngularVelocity rotateRate = imu.getAngularVelocity().toAngleUnit(AngleUnit.DEGREES);
-        return rotateRate.zRotationRate;
     }
 
     // Return the range sensor's distance (in inches)
