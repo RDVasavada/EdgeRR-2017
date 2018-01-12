@@ -62,7 +62,7 @@ public class Red2FullAuton extends LinearOpMode {
         period.reset();
 
         // Loop and read the RGB data.
-        while (opModeIsActive() && !jewelFlipped && period.seconds() < 10) {
+        while (opModeIsActive() && !jewelFlipped && period.seconds() < 8) {
 
             if (!orientationDetermined) { // Ball orientation not determined
 
@@ -177,7 +177,7 @@ public class Red2FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        robot.driveForwardForInches(29, 0.4);
+        robot.driveForwardForInches(29.5, 0.4);
 
         robot.waitForTick(100);
 
@@ -200,11 +200,11 @@ public class Red2FullAuton extends LinearOpMode {
 
             telemetry.update();
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(13, 0.4);
+            robot.driveForwardForInches(13.5, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 22.5;
+            double error = distance - 23;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);

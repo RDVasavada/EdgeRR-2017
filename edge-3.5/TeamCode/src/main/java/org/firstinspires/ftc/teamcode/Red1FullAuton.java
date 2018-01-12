@@ -62,7 +62,7 @@ public class Red1FullAuton extends LinearOpMode {
         period.reset();
 
         // Loop and read the RGB data.
-        while (opModeIsActive() && !jewelFlipped && period.seconds() < 10) {
+        while (opModeIsActive() && !jewelFlipped && period.seconds() < 8) {
 
             if (!orientationDetermined) { // Ball orientation not determined
 

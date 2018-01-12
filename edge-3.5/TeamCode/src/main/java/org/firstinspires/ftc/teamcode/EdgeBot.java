@@ -837,22 +837,22 @@ public class EdgeBot {
 
     // Move the wrist up
     public void clawWristDown() {
-        clawWristServo.setPosition(0);
+        clawWristServo.setPosition(0.03);
     }
 
     // Put the claw wrist in a lower than halfway position
     public void clawWristLow() {
-        clawWristServo.setPosition(0.12);
+        clawWristServo.setPosition(0.15);
     }
 
     // Put the claw wrist in a halfway position
     public void clawWristHalfway() {
-        clawWristServo.setPosition(0.18);
+        clawWristServo.setPosition(0.21);
     }
 
     // Move the wrist down
     public void clawWristUp() {
-        clawWristServo.setPosition(0.5);
+        clawWristServo.setPosition(0.53);
     }
 
     // Close the claw

@@ -62,7 +62,7 @@ public class Blue2FullAuton extends LinearOpMode {
         period.reset();
 
         // Loop and read the RGB data.
-        while (opModeIsActive() && !jewelFlipped && period.seconds() < 10) {
+        while (opModeIsActive() && !jewelFlipped && period.seconds() < 8) {
 
             if (!orientationDetermined) { // Ball orientation not determined
 
@@ -184,21 +184,60 @@ public class Blue2FullAuton extends LinearOpMode {
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(7.8, 0.4);
+            robot.driveForwardForInches(7.5, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 20;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
+            }
+
+            telemetry.update();
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(15.8, 0.4);
+            robot.driveForwardForInches(15.5, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 27.25;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
+            }
+
+            telemetry.update();
         } else if (column == RelicRecoveryVuMark.RIGHT) {
             robot.driveForwardForInches(23.8, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 33.5;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
+            }
+
+            telemetry.update();
         }
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+        robot.openClampServos();
         robot.driveForwardForInches(6, 0.2);
 
         robot.waitForTick(50);
-
-        robot.openClampServos();
-
-        robot.waitForTick(500);
 
         robot.driveBackwardForSteps(100, 0.3);
     }
