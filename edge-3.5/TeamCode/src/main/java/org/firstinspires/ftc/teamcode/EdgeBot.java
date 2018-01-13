@@ -789,14 +789,17 @@ public class EdgeBot {
         jewelLiftServo.setPosition(0.415);
     }
 
+    // Flip the jewel servo left
     public void jewelFlipLeft() {
         jewelFlipServo.setPosition(0);
     }
 
+    // Flip the jewel servo right
     public void jewelFlipRight() {
         jewelFlipServo.setPosition(1);
     }
 
+    // Reset the jewel servos
     public void resetJewelServos() {
         jewelLiftServo.setPosition(0.85);
         jewelFlipServo.setPosition(0.5);

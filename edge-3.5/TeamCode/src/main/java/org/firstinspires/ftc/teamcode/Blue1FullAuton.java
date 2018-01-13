@@ -167,7 +167,7 @@ public class Blue1FullAuton extends LinearOpMode {
 
         period.reset();
 
-        while (period.seconds() < 1) {
+        while (period.seconds() < 1 && opModeIsActive()) {
             robot.raiseLiftMotor(0.5);
         }
 
