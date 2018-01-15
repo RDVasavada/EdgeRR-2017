@@ -180,11 +180,11 @@ public class Blue1FullAuton extends LinearOpMode {
         //int x = 1; // Can use in place of the paper reading
 
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveBackwardForInches(24, 0.4);
+            robot.driveBackwardForInches(29, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveBackwardForInches(33.7, 0.4);
+            robot.driveBackwardForInches(38, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveBackwardForInches(43, 0.4);
+            robot.driveBackwardForInches(47, 0.4);
         }
 
         robot.waitForTick(100);
@@ -193,8 +193,8 @@ public class Blue1FullAuton extends LinearOpMode {
 
         robot.waitForTick(50);
 
+        robot.driveForwardForInches(8, 0.2);
         robot.openClampServos();
-        robot.driveForwardForInches(7, 0.2);
-        robot.driveBackwardForInches(1.5, 0.2);
+        robot.driveBackwardForInches(2, 0.2);
     }
 }

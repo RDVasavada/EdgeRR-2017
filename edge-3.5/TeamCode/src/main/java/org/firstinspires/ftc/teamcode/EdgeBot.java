@@ -801,7 +801,7 @@ public class EdgeBot {
 
     // Reset the jewel servos
     public void resetJewelServos() {
-        jewelLiftServo.setPosition(0.85);
+        jewelLiftServo.setPosition(1);
         jewelFlipServo.setPosition(0.5);
     }
 
@@ -840,7 +840,7 @@ public class EdgeBot {
 
     // Move the wrist up
     public void clawWristDown() {
-        clawWristServo.setPosition(0.03);
+        clawWristServo.setPosition(0.06);
     }
 
     // Put the claw wrist in a lower than halfway position

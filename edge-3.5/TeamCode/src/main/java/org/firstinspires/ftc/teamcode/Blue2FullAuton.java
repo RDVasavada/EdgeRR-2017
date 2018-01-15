@@ -220,7 +220,7 @@ public class Blue2FullAuton extends LinearOpMode {
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 33.5;
+            double error = distance - 33.7;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -234,11 +234,8 @@ public class Blue2FullAuton extends LinearOpMode {
         }
 
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+        robot.driveForwardForInches(8, 0.2);
         robot.openClampServos();
-        robot.driveForwardForInches(6, 0.2);
-
-        robot.waitForTick(50);
-
-        robot.driveBackwardForSteps(100, 0.3);
+        robot.driveBackwardForInches(2, 0.3);
     }
 }
