@@ -192,6 +192,6 @@ public class Red1FullAuton extends LinearOpMode {
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
         robot.driveForwardForInches(8, 0.2);
         robot.openClampServos();
-        robot.driveBackwardForInches(2, 0.2);
+        robot.driveBackwardForInches(3, 0.2);
     }
 }

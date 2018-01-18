@@ -240,6 +240,6 @@ public class Red2FullAuton extends LinearOpMode {
 
         robot.driveForwardForInches(6, 0.2);
         robot.openClampServos();
-        robot.driveBackwardForInches(2, 0.2);
+        robot.driveBackwardForInches(3, 0.2);
     }
 }

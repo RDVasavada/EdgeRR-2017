@@ -195,6 +195,6 @@ public class Blue1FullAuton extends LinearOpMode {
 
         robot.driveForwardForInches(8, 0.2);
         robot.openClampServos();
-        robot.driveBackwardForInches(2, 0.2);
+        robot.driveBackwardForInches(3, 0.2);
     }
 }
