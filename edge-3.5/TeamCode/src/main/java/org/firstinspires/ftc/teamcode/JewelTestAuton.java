@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Autonomous Jewel Test", group = "Sensor")
-//@Disabled
+@Disabled
 public class JewelTestAuton extends LinearOpMode {
 
     // The hardware object
