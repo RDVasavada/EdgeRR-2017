@@ -50,12 +50,8 @@ public class Red2FullAuton extends LinearOpMode {
         // Close the clamp servos
         robot.closeClampServos();
 
-        robot.waitForTick(10);
-
         // Lower the lift servo
         robot.lowerJewelArm();
-
-        robot.waitForTick(1800);
 
         // Start the timer
         period = new ElapsedTime();
