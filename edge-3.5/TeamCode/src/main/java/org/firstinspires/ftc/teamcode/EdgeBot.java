@@ -36,6 +36,8 @@ public class EdgeBot {
 
     public DcMotor craneExtensionMotor = null;
 
+    public DcMotor craneRotateMotor = null;
+
     public DcMotor motor7 = null;
     public DcMotor motor8 = null;
 
@@ -46,7 +48,6 @@ public class EdgeBot {
     public Servo clampServoLeft = null;
     public Servo clampServoRight = null;
 
-    public CRServo craneRotateServo = null;
     public Servo clawWristServo = null;
     public Servo clawPinchServo = null;
 
@@ -102,6 +103,9 @@ public class EdgeBot {
         // Initialize the crane extension motor
         craneExtensionMotor = hMap.dcMotor.get("cranemotor");
 
+        // Initialize the crane rotation motor
+        craneRotateMotor = hMap.dcMotor.get("cranerotate");
+
         // Initialize the jewel arm servos
         jewelLiftServo = hMap.servo.get("jewellift");
         jewelFlipServo = hMap.servo.get("jewelflip");
@@ -115,7 +119,6 @@ public class EdgeBot {
         openClampServos();
 
         // Initialize the crane servos
-        craneRotateServo = hMap.crservo.get("cranerotate");
         clawWristServo = hMap.servo.get("clawwrist");
         clawPinchServo = hMap.servo.get("clawpinch");
 
@@ -786,7 +789,7 @@ public class EdgeBot {
         waitForTick(400);
         jewelLiftServo.setPosition(0.55);
         waitForTick(400);
-        jewelLiftServo.setPosition(0.415);
+        jewelLiftServo.setPosition(0.4);
     }
 
     // Flip the jewel servo left
@@ -801,7 +804,7 @@ public class EdgeBot {
 
     // Reset the jewel servos
     public void resetJewelServos() {
-        jewelLiftServo.setPosition(1);
+        jewelLiftServo.setPosition(0.81);
         jewelFlipServo.setPosition(0.5);
     }
 
@@ -823,19 +826,14 @@ public class EdgeBot {
         clampServoRight.setPosition(0.65);
     }
 
-    // Move the crane servo left
-    public void craneRotateLeft() {
-        craneRotateServo.setPower(-0.1);
-    }
-
-    // Move the crane servo right
-    public void craneRotateRight() {
-        craneRotateServo.setPower(0.1);
+    // Move the crane rotation motor
+    public void craneRotate(double power) {
+        craneRotateMotor.setPower(power * 0.5);
     }
 
     // Stop the crane servo
     public void craneRotateStop() {
-        craneRotateServo.setPower(0);
+        craneRotateMotor.setPower(0);
     }
 
     // Move the wrist up

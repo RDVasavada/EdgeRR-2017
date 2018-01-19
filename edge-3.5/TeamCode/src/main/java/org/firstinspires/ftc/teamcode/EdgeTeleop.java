@@ -67,12 +67,9 @@ public class EdgeTeleop extends LinearOpMode {
             }
 
             // Update the crane rotation servo
-            if (gamepad2.left_stick_x < -0.1) {
-                robot.craneRotateLeft();
-                telemetry.addData("Crane ", "rotating left");
-            } else if (gamepad2.left_stick_x > 0.1) {
-                robot.craneRotateRight();
-                telemetry.addData("Crane ", "rotating right");
+            if (Math.abs(gamepad2.left_stick_x) > 0.1) {
+                robot.craneRotate(gamepad2.left_stick_x);
+                telemetry.addData("Crane ", "rotating");
             } else {
                 robot.craneRotateStop();
             }
