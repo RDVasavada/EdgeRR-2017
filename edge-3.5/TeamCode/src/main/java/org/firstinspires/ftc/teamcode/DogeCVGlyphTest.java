@@ -54,13 +54,17 @@ public class DogeCVGlyphTest extends OpMode
     @Override
     public void loop() {
 
-
+        while(runtime.seconds() < 3) {
+            telemetry.addData("Setting ", "up");
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
+        }
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
         telemetry.addData("Glyph Pos Offest", glyphDetector.getChosenGlyphPosition().toString());
 
-
+        telemetry.update();
     }
 
     /*
