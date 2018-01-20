@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.*;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,10 +15,12 @@ import java.io.IOException;
 
 @TeleOp(name="DogeCV Glyph Detector", group="DogeCV")
 //@Disabled
-public class DogeCVGlyphTest extends OpMode
+public class DogeCVGlyphTest extends LinearOpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+
+    private EdgeBot robot;
 
 
     private GlyphDetector glyphDetector = null;
@@ -25,7 +28,7 @@ public class DogeCVGlyphTest extends OpMode
      * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void init() {
+    public void runOpMode() {
         telemetry.addData("Status", "Initialized");
 
 
@@ -36,43 +39,33 @@ public class DogeCVGlyphTest extends OpMode
         glyphDetector.speed = GlyphDetector.GlyphDetectionSpeed.SLOW;
         glyphDetector.enable();
 
+        robot = new EdgeBot();
+        robot.init(hardwareMap, this);
 
-    }
+        waitForStart();
 
-    @Override
-    public void init_loop() {
-        telemetry.addData("Status", "Initialized. Gyro Calibration");
-    }
-
-    @Override
-    public void start() {
         runtime.reset();
 
+        while (opModeIsActive()) {
+            while(runtime.seconds() < 3) {
+                telemetry.addData("Setting ", "up");
+                telemetry.addData("Status", "Run Time: " + runtime.toString());
+                telemetry.update();
+            }
 
-    }
-
-    @Override
-    public void loop() {
-
-        while(runtime.seconds() < 3) {
-            telemetry.addData("Setting ", "up");
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
+            telemetry.addData("Glyph Pos Offest", glyphDetector.getChosenGlyphPosition().toString());
+
             telemetry.update();
+
+            if (gamepad1.a) {
+                if (glyphDetector.getChosenGlyphPosition().y > 10) {
+                    robot.driveForwardForInches(glyphDetector.getChosenGlyphPosition().y / 20, 0.3);
+                } else {
+                    robot.closeClampServos();
+                }
+            }
         }
-
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
-        telemetry.addData("Glyph Pos Offest", glyphDetector.getChosenGlyphPosition().toString());
-
-        telemetry.update();
     }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-        glyphDetector.disable();
-    }
-
 }
