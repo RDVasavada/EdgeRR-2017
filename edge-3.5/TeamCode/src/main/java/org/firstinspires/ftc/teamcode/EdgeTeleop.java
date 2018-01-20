@@ -25,22 +25,19 @@ public class EdgeTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            // Scale and set motor values
+            // Scale  motor values
             double forwardSpeed = gamepad1.left_stick_y;
             double strafeSpeed = gamepad1.left_stick_x;
 
             if (Math.abs(forwardSpeed) < 0.2) {
                 forwardSpeed *= 0.25;
-            } else {
-                forwardSpeed *= 0.85;
             }
 
             if (Math.abs(strafeSpeed) < 0.2) {
                 strafeSpeed *= 0.25;
-            } else {
-                strafeSpeed *= 0.85;
             }
 
+            // Set motor values
             robot.mecanumDrive(strafeSpeed, forwardSpeed, gamepad1.right_stick_x, telemetry);
 
             // Update the lift motor

@@ -111,7 +111,7 @@ public class Red2FullAuton extends LinearOpMode {
                 // Turn off the LEDs
                 //robot.turnOffLEDs();
 
-                // Keep the arm in place for two seconds
+                // Keep the arm in place for one second
                 robot.waitForTick(1000);
 
                 jewelFlipped = true;
@@ -137,6 +137,8 @@ public class Red2FullAuton extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate");
 
         boolean pictographScanned = false;
+
+        // Set unknown as the default column
         RelicRecoveryVuMark column = RelicRecoveryVuMark.UNKNOWN;
 
         relicTrackables.activate();
@@ -158,9 +160,7 @@ public class Red2FullAuton extends LinearOpMode {
             telemetry.update();
         }
 
-        // Deliver the block
-        robot.waitForTick(1000);
-
+        // Raise the lift motor
         period.reset();
 
         while (period.seconds() < 1 && opModeIsActive()) {
@@ -173,12 +173,11 @@ public class Red2FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
+        // Drive forwards off of the balancing stone and rotate counterclockwise 90 degrees
         robot.driveForwardForInches(29.5, 0.4);
-
-        robot.waitForTick(100);
-
         robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
 
+        // Drive forwards with distance sensor correction and center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
             robot.driveForwardForInches(23, 0.4);
 
@@ -229,12 +228,11 @@ public class Red2FullAuton extends LinearOpMode {
             telemetry.update();
         }
 
+        // Rotate clockwise 90 degrees and drive forwards into the column
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(3, 0.2);
+        robot.driveForwardForInches(9, 0.2);
 
-        robot.waitForTick(50);
-
-        robot.driveForwardForInches(6, 0.2);
+        // Open the clamp servos to drop the block and drive backwards
         robot.openClampServos();
         robot.driveBackwardForInches(3, 0.2);
     }

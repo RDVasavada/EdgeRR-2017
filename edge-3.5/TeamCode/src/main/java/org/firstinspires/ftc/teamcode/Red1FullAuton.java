@@ -111,7 +111,7 @@ public class Red1FullAuton extends LinearOpMode {
                 // Turn off the LEDs
                 //robot.turnOffLEDs();
 
-                // Keep the arm in place for two seconds
+                // Keep the arm in place for one second
                 robot.waitForTick(1000);
 
                 jewelFlipped = true;
@@ -137,6 +137,8 @@ public class Red1FullAuton extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate");
 
         boolean pictographScanned = false;
+
+        // Set unknown as the default column
         RelicRecoveryVuMark column = RelicRecoveryVuMark.UNKNOWN;
 
         relicTrackables.activate();
@@ -158,9 +160,7 @@ public class Red1FullAuton extends LinearOpMode {
             telemetry.update();
         }
 
-        // Deliver the block
-        robot.waitForTick(1000);
-
+        // Raise the lift motor
         period.reset();
 
         while (period.seconds() < 1 && opModeIsActive()) {
@@ -173,8 +173,7 @@ public class Red1FullAuton extends LinearOpMode {
 
         robot.waitForTick(500);
 
-        //int x = 1; // Can use in place of the paper reading
-
+        // Drive forwards with center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
             robot.driveForwardForInches(46.5, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
@@ -183,11 +182,12 @@ public class Red1FullAuton extends LinearOpMode {
             robot.driveForwardForInches(27.5, 0.4);
         }
 
-        robot.waitForTick(100);
-
+        // Rotate clockwise 90 degrees and drive forwards into the column
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
         robot.driveForwardForInches(8, 0.2);
-        robot.openClampServos();
+
+        // Open the clamp servos to drop the block and drive backwards
+        robot.openClampServosHalfway();
         robot.driveBackwardForInches(3, 0.2);
     }
 }
