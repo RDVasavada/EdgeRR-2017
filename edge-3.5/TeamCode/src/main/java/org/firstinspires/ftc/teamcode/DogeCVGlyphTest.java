@@ -14,7 +14,7 @@ import java.io.IOException;
 
 
 @TeleOp(name="DogeCV Glyph Detector", group="DogeCV")
-//@Disabled
+@Disabled
 public class DogeCVGlyphTest extends LinearOpMode
 {
     // Declare OpMode members.

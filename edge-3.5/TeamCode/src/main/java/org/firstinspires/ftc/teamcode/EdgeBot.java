@@ -229,12 +229,6 @@ public class EdgeBot {
         frontRightMotor.setPower(frontRight);
         rearLeftMotor.setPower(rearLeft);
         rearRightMotor.setPower(rearRight);
-
-        telemetry.addLine("Motor powers")
-                .addData("Front left", frontLeft)
-                .addData("Front right", frontRight)
-                .addData("Rear left", rearLeft)
-                .addData("Rear right", rearRight);
     }
 
     public void driveBackwardForSteps(int numberOfSteps, double speed) {
@@ -353,6 +347,30 @@ public class EdgeBot {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rearLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rearRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    // Strafe left at a given speed
+    public void strafeLeft(double speed) {
+        setDriveMotorsRunUsingEncoders();
+
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        setDriveMotorsToCommonSpeed(speed);
+    }
+
+    // Strafe right at a given speed
+    public void strafeRight(double speed) {
+        setDriveMotorsRunUsingEncoders();
+
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        setDriveMotorsToCommonSpeed(speed);
     }
 
     // Rotate counterclockwise at given speed
@@ -604,7 +622,7 @@ public class EdgeBot {
     }
 
     // Strafe left with encoders and gyro correction
-    public void autoStrafeLeft(int numberOfSteps, double speed, Telemetry telemetry) {
+    public void autoStrafeLeftForInches(double inches, double speed, Telemetry telemetry) {
         // Set the motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -612,6 +630,9 @@ public class EdgeBot {
         rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForTick(40);
+
+        // Calculate encoder steps
+        int numberOfSteps = inchToEncoder(inches);
 
         // Record initial heading
         float initialHeading = getRawGyroHeading();
@@ -676,7 +697,7 @@ public class EdgeBot {
     }
 
     // Strafe right with encoders and gyro correction
-    public void autoStrafeRight(int numberOfSteps, double speed, Telemetry telemetry) {
+    public void autoStrafeRightForInches(int inches, double speed, Telemetry telemetry) {
         // Set the motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -684,6 +705,9 @@ public class EdgeBot {
         rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         waitForTick(40);
+
+        // Calculate encoder steps
+        int numberOfSteps = inchToEncoder(inches);
 
         // Record initial heading
         float initialHeading = getRawGyroHeading();
@@ -826,7 +850,13 @@ public class EdgeBot {
 
     // Move the crane rotation motor
     public void craneRotate(double power) {
-        craneRotateMotor.setPower(power * 0.5);
+        if (power > 0) {
+            craneRotateMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        } else {
+            craneRotateMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+
+        craneRotateMotor.setPower(0.2);
     }
 
     // Stop the crane servo
