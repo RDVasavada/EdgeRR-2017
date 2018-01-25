@@ -38,9 +38,6 @@ public class EdgeBot {
 
     public DcMotor craneRotateMotor = null;
 
-    public DcMotor motor7 = null;
-    public DcMotor motor8 = null;
-
     // Declare servos
     public Servo jewelLiftServo = null;
     public Servo jewelFlipServo = null;
@@ -51,11 +48,7 @@ public class EdgeBot {
     public Servo clawWristServo = null;
     public Servo clawPinchServo = null;
 
-    public Servo servo8 = null;
-    public Servo servo9 = null;
-    public Servo servo10 = null;
-    public Servo servo11 = null;
-    public Servo servo12 = null;
+    public Servo phoneServo = null;
 
     // Declare imu (inertial motion unit)
     public BNO055IMU imu = null;
@@ -124,6 +117,11 @@ public class EdgeBot {
 
         clawWristDown();
         clawPinch();
+
+        // Initialize the phone servo
+        phoneServo = hMap.servo.get("phoneservo");
+
+        phoneIn();
 
         // Initialize the imu
         imu = hMap.get(BNO055IMU.class, "imu");
@@ -805,6 +803,22 @@ public class EdgeBot {
         craneExtensionMotor.setPower(0);
     }
 
+    // Move the crane rotation motor
+    public void craneRotate(double power) {
+        if (power > 0) {
+            craneRotateMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        } else {
+            craneRotateMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+
+        craneRotateMotor.setPower(0.2);
+    }
+
+    // Stop the crane servo
+    public void craneRotateStop() {
+        craneRotateMotor.setPower(0);
+    }
+
     // Lower jewel arm
     public void lowerJewelArm() {
         jewelLiftServo.setPosition(0.7);
@@ -848,22 +862,6 @@ public class EdgeBot {
         clampServoRight.setPosition(0.65);
     }
 
-    // Move the crane rotation motor
-    public void craneRotate(double power) {
-        if (power > 0) {
-            craneRotateMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        } else {
-            craneRotateMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-
-        craneRotateMotor.setPower(0.2);
-    }
-
-    // Stop the crane servo
-    public void craneRotateStop() {
-        craneRotateMotor.setPower(0);
-    }
-
     // Move the wrist up
     public void clawWristDown() {
         clawWristServo.setPosition(0.06);
@@ -897,6 +895,16 @@ public class EdgeBot {
     // Open the claw
     public void clawOpen() {
         clawPinchServo.setPosition(1);
+    }
+
+    // Move the phone servo so that the phone is parallel to the robot
+    public void phoneIn() {
+        phoneServo.setPosition(0);
+    }
+
+    // Extend the phone
+    public void phoneOut() {
+        phoneServo.setPosition(0.5);
     }
 
     // Get the raw gyro heading in degrees

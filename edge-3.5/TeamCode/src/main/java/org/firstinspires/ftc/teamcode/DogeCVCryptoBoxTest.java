@@ -47,6 +47,7 @@ public class DogeCVCryptoBoxTest extends LinearOpMode
         waitForStart();
 
         robot.closeClampServos();
+        robot.phoneOut();
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
