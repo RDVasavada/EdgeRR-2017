@@ -177,9 +177,9 @@ public class Red1FullAuton extends LinearOpMode {
         if (column == RelicRecoveryVuMark.LEFT) {
             robot.driveForwardForInches(46.5, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(36.5, 0.4);
+            robot.driveForwardForInches(37, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(27.5, 0.4);
+            robot.driveForwardForInches(29, 0.4);
         }
 
         // Rotate clockwise 90 degrees and drive forwards into the column

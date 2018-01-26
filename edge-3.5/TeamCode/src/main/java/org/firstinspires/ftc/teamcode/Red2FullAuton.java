@@ -174,16 +174,16 @@ public class Red2FullAuton extends LinearOpMode {
         robot.waitForTick(500);
 
         // Drive forwards off of the balancing stone and rotate counterclockwise 90 degrees
-        robot.driveForwardForInches(29.5, 0.4);
-        robot.rotateCounterClockwiseEncoder(90, 0.3, telemetry);
+        robot.driveForwardForInches(29, 0.4);
+        robot.rotateCounterClockwiseEncoder(90, 0.2, telemetry);
 
         // Drive forwards with distance sensor correction and center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(23, 0.4);
+            robot.driveForwardForInches(23.5, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 31;
+            double error = distance - 31.5;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -195,11 +195,11 @@ public class Red2FullAuton extends LinearOpMode {
 
             telemetry.update();
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(13.5, 0.4);
+            robot.driveForwardForInches(15, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 23;
+            double error = distance - 25;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -211,11 +211,11 @@ public class Red2FullAuton extends LinearOpMode {
 
             telemetry.update();
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(8, 0.4);
+            robot.driveForwardForInches(6, 0.4);
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 17;
+            double error = distance - 14;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -229,8 +229,8 @@ public class Red2FullAuton extends LinearOpMode {
         }
 
         // Rotate clockwise 90 degrees and drive forwards into the column
-        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(9, 0.2);
+        robot.rotateClockwiseEncoder(90, 0.2, telemetry);
+        robot.driveForwardForInches(9.5, 0.2);
 
         // Open the clamp servos to drop the block and drive backwards
         robot.openClampServos();

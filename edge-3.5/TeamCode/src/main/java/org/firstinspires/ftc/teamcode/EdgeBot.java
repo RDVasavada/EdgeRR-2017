@@ -458,7 +458,7 @@ public class EdgeBot {
         float degreesLeft = targetDegrees - degreesRotated;
 
         // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 3 && currentOpmode.opModeIsActive()) {
+        while (Math.abs(degreesLeft) > 2 && currentOpmode.opModeIsActive()) {
             numberOfSteps = Math.round(4000 / (360 / degreesLeft));
 
             telemetry.addData("Initial heading", initialHeading);
@@ -573,7 +573,7 @@ public class EdgeBot {
         float degreesLeft = targetDegrees - degreesRotated;
 
         // Loop until the achieved heading is within five degrees of the target
-        while (Math.abs(degreesLeft) > 3 && currentOpmode.opModeIsActive()) {
+        while (Math.abs(degreesLeft) > 2 && currentOpmode.opModeIsActive()) {
             numberOfSteps = Math.round(4000 / (360 / degreesLeft));
 
             telemetry.addData("Initial heading", initialHeading);
@@ -806,9 +806,9 @@ public class EdgeBot {
     // Move the crane rotation motor
     public void craneRotate(double power) {
         if (power > 0) {
-            craneRotateMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        } else {
             craneRotateMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else {
+            craneRotateMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         }
 
         craneRotateMotor.setPower(0.2);
@@ -899,12 +899,12 @@ public class EdgeBot {
 
     // Move the phone servo so that the phone is parallel to the robot
     public void phoneIn() {
-        phoneServo.setPosition(0);
+        phoneServo.setPosition(0.3);
     }
 
     // Extend the phone
     public void phoneOut() {
-        phoneServo.setPosition(0.5);
+        phoneServo.setPosition(0);
     }
 
     // Get the raw gyro heading in degrees

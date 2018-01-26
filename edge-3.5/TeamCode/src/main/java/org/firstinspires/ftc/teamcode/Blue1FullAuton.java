@@ -175,11 +175,11 @@ public class Blue1FullAuton extends LinearOpMode {
 
         // Drive backwards with center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveBackwardForInches(29, 0.4);
+            robot.driveBackwardForInches(28, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
             robot.driveBackwardForInches(38, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveBackwardForInches(47, 0.4);
+            robot.driveBackwardForInches(44, 0.4);
         }
 
         // Rotate clockwise 90 degrees and drive forwards into the column
