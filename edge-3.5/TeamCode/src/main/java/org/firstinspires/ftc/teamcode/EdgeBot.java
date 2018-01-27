@@ -121,7 +121,7 @@ public class EdgeBot {
         clawPinch();
 
         // Initialize the hook servo
-        hookServo = hMap.crservo.get("hookservo");
+        //hookServo = hMap.crservo.get("hookservo");
 
         // Initialize the phone servo
         phoneServo = hMap.servo.get("phoneservo");
@@ -214,6 +214,49 @@ public class EdgeBot {
             rearLeft = -strafe;
             rearRight = strafe;
         }
+
+        // Scale the motor powers with 1 as the max
+        double max1 = Math.max(Math.abs(frontLeft), Math.abs(frontRight));
+        double max2 = Math.max(Math.abs(rearLeft), Math.abs(rearRight));
+        double maxValue = Math.max(max1, max2);
+
+        if (maxValue > 1.0) {
+            frontLeft /= maxValue;
+            frontRight /= maxValue;
+            rearLeft /= maxValue;
+            rearRight /= maxValue;
+        }
+
+        // Set the motors to the calculated powers
+        frontLeftMotor.setPower(frontLeft);
+        frontRightMotor.setPower(frontRight);
+        rearLeftMotor.setPower(rearLeft);
+        rearRightMotor.setPower(rearRight);
+    }
+
+    public void mecanumDrive2(double leftX, double leftY, double rightX, Telemetry telemetry) {
+        // Set motor directions
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        setDriveMotorsRunUsingEncoders();
+
+        // Adjust the forward and strafe to make right and up positive
+        leftX *= -0.75;
+        leftY *= -0.85;
+
+        // The vector sum of the x and y positions of the left joystick
+        double velocity = Math.min(Math.sqrt(Math.pow(leftX, 2) + Math.pow(leftY, 2)), 1);
+        double heading = Math.atan2(-leftX, leftY);
+        double turnVelocity = -rightX;
+
+        // Convert velocity and heading to motor powers
+        double frontLeft = velocity * Math.sin(-heading + Math.PI / 4) + turnVelocity;
+        double frontRight  = velocity * Math.cos(-heading + Math.PI / 4) - turnVelocity;
+        double rearLeft = velocity * Math.cos(-heading + Math.PI / 4) + turnVelocity;
+        double rearRight = velocity * Math.sin(-heading + Math.PI / 4) - turnVelocity;
 
         // Scale the motor powers with 1 as the max
         double max1 = Math.max(Math.abs(frontLeft), Math.abs(frontRight));
@@ -869,7 +912,7 @@ public class EdgeBot {
 
     // Move the wrist up
     public void clawWristDown() {
-        clawWristServo.setPosition(0.06);
+        clawWristServo.setPosition(0.065);
     }
 
     // Put the claw wrist in a lower than halfway position

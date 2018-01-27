@@ -38,7 +38,7 @@ public class EdgeTeleop extends LinearOpMode {
             }
 
             // Set motor values
-            robot.mecanumDrive(strafeSpeed, forwardSpeed, gamepad1.right_stick_x, telemetry);
+            robot.mecanumDrive2(strafeSpeed, forwardSpeed, gamepad1.right_stick_x, telemetry);
 
             // Update the lift motor
             if (gamepad1.right_trigger > 0.2) {
@@ -110,6 +110,7 @@ public class EdgeTeleop extends LinearOpMode {
             }
 
             // Update the hook servo
+            /*
             if (gamepad1.dpad_down) {
                 robot.lowerHook();
             } else if (gamepad1.dpad_up) {
@@ -117,7 +118,7 @@ public class EdgeTeleop extends LinearOpMode {
             } else {
                 robot.hookServoStop();
             }
-
+            */
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
