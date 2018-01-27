@@ -48,7 +48,7 @@ public class EdgeBot {
     public Servo clawWristServo = null;
     public Servo clawPinchServo = null;
 
-    public Servo hookServo = null;
+    public CRServo hookServo = null;
 
     public Servo phoneServo = null;
 
@@ -121,7 +121,7 @@ public class EdgeBot {
         clawPinch();
 
         // Initialize the hook servo
-        hookServo = hMap.servo.get("hookservo");
+        hookServo = hMap.crservo.get("hookservo");
 
         // Initialize the phone servo
         phoneServo = hMap.servo.get("phoneservo");
@@ -903,11 +903,20 @@ public class EdgeBot {
     }
 
     // Lower the hook
-    public void lowerHook() {}
+    public void lowerHook() {
+        hookServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        hookServo.setPower(0.1);
+    }
 
     // Raise the hook
     public void raiseHook() {
+        hookServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        hookServo.setPower(0.1);
+    }
 
+    // Stop the hook servo
+    public void hookServoStop() {
+        hookServo.setPower(0);
     }
 
     // Move the phone servo so that the phone is parallel to the robot

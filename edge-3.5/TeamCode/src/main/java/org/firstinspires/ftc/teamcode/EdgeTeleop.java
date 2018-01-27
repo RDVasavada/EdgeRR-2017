@@ -109,6 +109,15 @@ public class EdgeTeleop extends LinearOpMode {
                 telemetry.addData("claw ", "opening");
             }
 
+            // Update the hook servo
+            if (gamepad1.dpad_down) {
+                robot.lowerHook();
+            } else if (gamepad1.dpad_up) {
+                robot.raiseHook();
+            } else {
+                robot.hookServoStop();
+            }
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
