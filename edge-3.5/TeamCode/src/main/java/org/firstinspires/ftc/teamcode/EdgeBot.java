@@ -244,8 +244,11 @@ public class EdgeBot {
         setDriveMotorsRunUsingEncoders();
 
         // Adjust the forward and strafe to make right and up positive
-        leftX *= -0.75;
-        leftY *= -0.85;
+        leftX *= -0.8;
+        leftY *= -0.95;
+
+        // Adjust the rotation
+        rightX *= -1;
 
         // The vector sum of the x and y positions of the left joystick
         double velocity = Math.min(Math.sqrt(Math.pow(leftX, 2) + Math.pow(leftY, 2)), 1);
@@ -275,6 +278,11 @@ public class EdgeBot {
         frontRightMotor.setPower(frontRight);
         rearLeftMotor.setPower(rearLeft);
         rearRightMotor.setPower(rearRight);
+
+        telemetry.addData("Front left", frontLeft);
+        telemetry.addData("Front right", frontRight);
+        telemetry.addData("Rear left", rearLeft);
+        telemetry.addData("Rear right", rearRight);
     }
 
     public void driveBackwardForSteps(int numberOfSteps, double speed) {
@@ -371,6 +379,14 @@ public class EdgeBot {
         rearRightMotor.setPower(speed);
     }
 
+    // Set the drive motors to run without encoders
+    public  void setDriveMotorsRunWithoutEncoders() {
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rearLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rearRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     // Set the drive motors to run using encoders
     public void setDriveMotorsRunUsingEncoders() {
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -420,7 +436,7 @@ public class EdgeBot {
     }
 
     // Rotate counterclockwise at given speed
-    private void rotateCounterClockwise(double speed) {
+    public void rotateCounterClockwise(double speed) {
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -430,7 +446,7 @@ public class EdgeBot {
     }
 
     // Rotate clockwise at given speed
-    private void rotateClockwise(double speed) {
+    public void rotateClockwise(double speed) {
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -912,7 +928,7 @@ public class EdgeBot {
 
     // Move the wrist up
     public void clawWristDown() {
-        clawWristServo.setPosition(0.065);
+        clawWristServo.setPosition(0.07);
     }
 
     // Put the claw wrist in a lower than halfway position
