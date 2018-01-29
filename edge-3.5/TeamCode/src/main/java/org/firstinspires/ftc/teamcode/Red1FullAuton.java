@@ -183,7 +183,7 @@ public class Red1FullAuton extends LinearOpMode {
         }
 
         // Rotate clockwise 90 degrees and drive forwards into the column
-        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
+        robot.rotateClockwiseEncoder(90, 0.25, telemetry);
         robot.driveForwardForInches(8, 0.2);
 
         // Open the clamp servos to drop the block and drive backwards
@@ -191,3 +191,4 @@ public class Red1FullAuton extends LinearOpMode {
         robot.driveBackwardForInches(3, 0.2);
     }
 }
+

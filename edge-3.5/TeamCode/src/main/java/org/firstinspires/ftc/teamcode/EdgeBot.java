@@ -4,9 +4,7 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,15 +13,14 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.opencv.core.Mat;
 
 public class EdgeBot {
     // Declare motors
@@ -184,57 +181,7 @@ public class EdgeBot {
     }
 
     // Converts joystick inputs to motor powers for mecanum wheels
-    public void mecanumDrive(double strafe, double forward, double rotation, Telemetry telemetry) {
-        // Set motor directions
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        setDriveMotorsRunUsingEncoders();
-
-        double frontLeft;
-        double frontRight;
-        double rearLeft;
-        double rearRight;
-
-        // Adjust the forward and strafe to make right and up positive
-        forward *= -0.75;
-        strafe *= -0.85;
-
-        // Calculate motor powers
-        if (Math.abs(forward) >= Math.abs(strafe)) {
-            frontLeft = forward + rotation;
-            frontRight = forward - rotation;
-            rearLeft = forward + rotation;
-            rearRight = forward - rotation;
-        } else {
-            frontLeft = strafe;
-            frontRight = -strafe;
-            rearLeft = -strafe;
-            rearRight = strafe;
-        }
-
-        // Scale the motor powers with 1 as the max
-        double max1 = Math.max(Math.abs(frontLeft), Math.abs(frontRight));
-        double max2 = Math.max(Math.abs(rearLeft), Math.abs(rearRight));
-        double maxValue = Math.max(max1, max2);
-
-        if (maxValue > 1.0) {
-            frontLeft /= maxValue;
-            frontRight /= maxValue;
-            rearLeft /= maxValue;
-            rearRight /= maxValue;
-        }
-
-        // Set the motors to the calculated powers
-        frontLeftMotor.setPower(frontLeft);
-        frontRightMotor.setPower(frontRight);
-        rearLeftMotor.setPower(rearLeft);
-        rearRightMotor.setPower(rearRight);
-    }
-
-    public void mecanumDrive2(double leftX, double leftY, double rightX, Telemetry telemetry) {
+    public void mecanumDrive(double leftX, double leftY, double rightX, Telemetry telemetry) {
         // Set motor directions
         frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -458,7 +405,7 @@ public class EdgeBot {
     // Rotate counterclockwise by a given amount and at a given speed with using encoders and gyro correction
     public void rotateCounterClockwiseEncoder(int targetDegrees, double speed, Telemetry telemetry) {
         // Adjust the degrees to rotate
-        //Undershoot and use the gyro to go the rest of the way
+        // Undershoot and use the gyro to go the rest of the way
         int degreesToRotate = targetDegrees - 20;
 
         int numberOfSteps = (4000 / (360 / degreesToRotate));
@@ -683,6 +630,35 @@ public class EdgeBot {
         setDriveMotorsRunUsingEncoders();
     }
 
+    // Rotate to a given gyro heading
+    public void rotateToGyroHeading(int targetHeading, double speed, Telemetry telemetry) {
+        // Record initial heading
+        float initialHeading = getRawGyroHeading();
+
+        // Calculate degrees to rotate
+        float degreesToRotate = targetHeading - initialHeading;
+
+        if (degreesToRotate < -180) {
+            // Should rotate clockwise
+            degreesToRotate = 360 + degreesToRotate;
+
+            rotateClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
+        } else if (degreesToRotate < 0) {
+            // Should rotate counterclockwise
+            degreesToRotate *= -1;
+
+            rotateCounterClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
+        } else if (degreesToRotate < 180) {
+            // Should rotate clockwise
+            rotateClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
+        } else if (degreesToRotate > 180) {
+            // Should rotate counterclockwise
+            degreesToRotate = 360 - degreesToRotate;
+
+            rotateCounterClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
+        }
+    }
+
     // Strafe left with encoders and gyro correction
     public void autoStrafeLeftForInches(double inches, double speed, Telemetry telemetry) {
         // Set the motor directions
@@ -738,18 +714,18 @@ public class EdgeBot {
         int rotation = Math.round(finalHeading - initialHeading);
 
         // Rotate based on the error
-        if (rotation > 4 && rotation < 180) {
+        if (rotation > 2 && rotation < 180) {
             rotateClockwiseEncoder(Math.abs(rotation), 0.3, telemetry);
-        } else if (rotation < -4 && rotation > -180) {
+        } else if (rotation < -2 && rotation > -180) {
             rotateCounterClockwiseEncoder(Math.abs(rotation), 0.3, telemetry);
         } else if (rotation > 180) {
             int adjustedRotation = 360 - rotation;
-            if (adjustedRotation > 4) {
+            if (adjustedRotation > 2) {
                 rotateCounterClockwiseEncoder(adjustedRotation, 0.3, telemetry);
             }
         } else if (rotation < -180) {
             int adjustedRotation = 360 + rotation;
-            if (adjustedRotation > 4) {
+            if (adjustedRotation > 2) {
                 rotateClockwiseEncoder(adjustedRotation, 0.3, telemetry);
             }
         }

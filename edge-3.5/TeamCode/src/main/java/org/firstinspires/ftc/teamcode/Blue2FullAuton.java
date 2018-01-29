@@ -175,7 +175,7 @@ public class Blue2FullAuton extends LinearOpMode {
 
         // Drive backwards off of the balancing stone and rotate counterclockwise 90 degrees
         robot.driveBackwardForInches(28, 0.4);
-        robot.rotateCounterClockwiseEncoder(90, 0.2, telemetry);
+        robot.rotateCounterClockwiseEncoder(90, 0.25, telemetry);
 
         // Drive forwards with distance sensor correction and center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
@@ -229,7 +229,7 @@ public class Blue2FullAuton extends LinearOpMode {
         }
 
         // Rotate counterclockwise 90 degrees and drive forwards into the column
-        robot.rotateCounterClockwiseEncoder(90, 0.2, telemetry);
+        robot.rotateCounterClockwiseEncoder(90, 0.25, telemetry);
         robot.driveForwardForInches(8, 0.2);
 
         // Open the clamp servos to drop the block and drive backwards
