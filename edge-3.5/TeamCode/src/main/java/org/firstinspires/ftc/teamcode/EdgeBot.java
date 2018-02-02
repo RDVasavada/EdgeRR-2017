@@ -358,6 +358,30 @@ public class EdgeBot {
         rearRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    // Drive forwards at a given speed
+    public void driveForwards(double speed) {
+        setDriveMotorsRunUsingEncoders();
+
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        setDriveMotorsToCommonSpeed(speed);
+    }
+
+    // Drive backwards at a given speed
+    public void driveBackwards(double speed) {
+        setDriveMotorsRunUsingEncoders();
+
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        setDriveMotorsToCommonSpeed(speed);
+    }
+
     // Strafe left at a given speed
     public void strafeLeft(double speed) {
         setDriveMotorsRunUsingEncoders();
@@ -954,14 +978,14 @@ public class EdgeBot {
         hookServo.setPower(0);
     }
 
-    // Move the phone servo so that the phone is parallel to the robot
+    // Move the phone servo so that the phone is parallel to side of the robot
     public void phoneIn() {
-        phoneServo.setPosition(0.3);
+        phoneServo.setPosition(0.6);
     }
 
-    // Extend the phone
+    // Extend the phone so that it is parallel to the front of the robot
     public void phoneOut() {
-        phoneServo.setPosition(0);
+        phoneServo.setPosition(0.17);
     }
 
     // Get the raw gyro heading in degrees

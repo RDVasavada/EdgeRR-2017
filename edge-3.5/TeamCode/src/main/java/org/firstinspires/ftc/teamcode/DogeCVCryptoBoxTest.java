@@ -36,7 +36,7 @@ public class DogeCVCryptoBoxTest extends LinearOpMode
         robot = new EdgeBot();
         robot.init(hardwareMap, this);
 
-        cryptoboxDetector.rotateMat = false;
+        cryptoboxDetector.rotateMat = true;
 
         //Optional Test Code to load images via Drawables
         //cryptoboxDetector.useImportedImage = true;
@@ -47,7 +47,6 @@ public class DogeCVCryptoBoxTest extends LinearOpMode
         waitForStart();
 
         robot.closeClampServos();
-        robot.phoneOut();
 
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -62,24 +61,29 @@ public class DogeCVCryptoBoxTest extends LinearOpMode
 
             if (error > 10) {
                 while (error > 10 && opModeIsActive() && gamepad1.a) {
-                    robot.mecanumDrive(0, 0.1, 0, telemetry);
+                    robot.driveForwards(0.1);
                     error = cryptoboxDetector.getCryptoBoxCenterPosition() - 350;
                 }
             } else if (error < -10) {
                 while (error < -10 && opModeIsActive() && gamepad1.a) {
-                    robot.mecanumDrive(0, -0.1, 0, telemetry);
+                    robot.driveBackwards(0.1);
                     error = cryptoboxDetector.getCryptoBoxCenterPosition() - 350;
                 }
             } else {
-                robot.stopDriveMotors();
+                if (gamepad1.a) {
+                    robot.stopDriveMotors();
 
-                cryptoboxDetector.disable();
+                    cryptoboxDetector.disable();
 
-                robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-                robot.driveForwardForInches(36, 0.2);
-                robot.openClampServos();
+                    robot.rotateClockwiseEncoder(90, 0.3, telemetry);
+                    runtime.reset();
+                    while (runtime.seconds() < 5 && opModeIsActive()) {
+                        robot.driveForwards(0.3);
+                    }
+                    robot.openClampServos();
 
-                stop();
+                    stop();
+                }
             }
 
             telemetry.addData("Error", error);
