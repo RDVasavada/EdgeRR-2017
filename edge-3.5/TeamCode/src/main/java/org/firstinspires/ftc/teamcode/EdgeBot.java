@@ -1055,7 +1055,7 @@ public class EdgeBot {
 
     // Convert from inches to encoder counts
     public int inchToEncoder(double inches) {
-        int ticks = (int)Math.round(inches * 39); // 39 encoder ticks for one inch
+        int ticks = (int)Math.round(inches * Constants.ENCODER_COUNTS_PER_INCH); // 39 encoder ticks for one inch
 
         return ticks;
     }
