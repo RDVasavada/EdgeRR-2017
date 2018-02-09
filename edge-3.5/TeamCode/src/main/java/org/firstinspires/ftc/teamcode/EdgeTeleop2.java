@@ -11,12 +11,12 @@ public class EdgeTeleop2 extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // Declaring the hardware object
-    EdgeBot robot;
+    EdgeBot2 robot;
 
     @Override
     public void runOpMode() {
         // Initializing the hardware object
-        robot = new EdgeBot();
+        robot = new EdgeBot2();
         robot.init(hardwareMap, this);
 
         // Wait for the driver to press play
@@ -49,6 +49,29 @@ public class EdgeTeleop2 extends LinearOpMode {
                 telemetry.addData("Lift ", "down");
             } else {
                 robot.stopLiftMotor();
+            }
+
+            // Update the intake motor
+            if (gamepad1.right_bumper) {
+                robot.intakeIn();
+                telemetry.addData("Intake ", "in");
+            } else if (gamepad1.left_bumper) {
+                robot.intakeOut();
+                telemetry.addData("Intake ", "out");
+            } else if (gamepad1.x) {
+                robot.intakeStop();
+            }
+
+            // Update the intake servos
+            if (gamepad1.a) {
+                robot.closeIntakeServos();
+                telemetry.addData("Clamp servos ", "closing");
+            } else if (gamepad1.b) {
+                robot.openIntakeServosHalfway();
+                telemetry.addData("Clamp servos ", "opening halfway");
+            } else if (gamepad1.y) {
+                robot.openIntakeServos();
+                telemetry.addData("Clamp servos ", "open fully");
             }
 
             // Update the crane rotation servo

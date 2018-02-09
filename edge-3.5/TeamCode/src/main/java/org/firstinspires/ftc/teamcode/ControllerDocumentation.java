@@ -12,6 +12,7 @@ package org.firstinspires.ftc.teamcode;
         - Right Bumper: Reverse Intake
         - A Button: Clamp servos closed
         - B Button: Clamp servos half open
+        - X Button: Intake Stop
         - Y Button: Clamp servos fully open
     Controller 2:
         - Left Joystick: Rotate Crane Servo

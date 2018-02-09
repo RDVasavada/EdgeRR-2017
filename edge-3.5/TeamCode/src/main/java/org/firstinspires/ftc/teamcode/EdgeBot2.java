@@ -92,6 +92,7 @@ public class EdgeBot2 {
 
         // Initialize the lift motor
         liftMotor = hMap.dcMotor.get("liftmotor");
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize the intake motor
         intakeMotor = hMap.dcMotor.get("intakemotor");
@@ -109,8 +110,8 @@ public class EdgeBot2 {
         resetJewelServos();
 
         // Initialize the clamp servos
-        intakeServoBottom = hMap.servo.get("topintake");
         intakeServoBottom = hMap.servo.get("bottomintake");
+        intakeServoTop = hMap.servo.get("topintake");
 
         //openIntakeServos();
 
@@ -895,31 +896,40 @@ public class EdgeBot2 {
 
     // Lower the lift
     public void lowerLiftMotor(double power) {
+        //intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setPower(power);
     }
 
     // Raise the lift
     public void raiseLiftMotor(double power) {
+        //intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotor.setPower(power);
     }
 
     // Stop the lift
     public void stopLiftMotor() {
+        //liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setTargetPosition(liftMotor.getCurrentPosition());
         liftMotor.setPower(0);
     }
 
     // Make the intake pick up (intake)
     public void intakeIn() {
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setPower(Constants.INTAKE_SPEED);
     }
 
     // Make the intake expel blocks (expulsion)
     public void intakeOut() {
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setPower(Constants.INTAKE_SPEED);
+    }
+
+    // Stop the intake motor
+    public void intakeStop() {
+        intakeMotor.setPower(0);
     }
 
     // Move the crane backward
@@ -982,20 +992,20 @@ public class EdgeBot2 {
 
     // Close the intake servos
     public void closeIntakeServos() {
-        intakeServoBottom.setPosition(0.71);
-        intakeServoTop.setPosition(0.24);
+        intakeServoBottom.setPosition(0);
+        intakeServoTop.setPosition(0);
     }
 
     // Open the intake servos halfway for isolating one block
     public void openIntakeServosHalfway() {
-        intakeServoBottom.setPosition(0.58);
-        intakeServoTop.setPosition(0.37);
+        intakeServoBottom.setPosition(0.5);
+        intakeServoTop.setPosition(0.5);
     }
 
     // Open the intake servos
     public void openIntakeServos() {
-        intakeServoBottom.setPosition(0.30);
-        intakeServoTop.setPosition(0.65);
+        intakeServoBottom.setPosition(1);
+        intakeServoTop.setPosition(1);
     }
 
     // Move the wrist up
