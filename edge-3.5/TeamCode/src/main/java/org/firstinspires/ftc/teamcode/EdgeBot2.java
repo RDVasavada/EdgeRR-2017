@@ -92,7 +92,6 @@ public class EdgeBot2 {
 
         // Initialize the lift motor
         liftMotor = hMap.dcMotor.get("liftmotor");
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize the intake motor
         intakeMotor = hMap.dcMotor.get("intakemotor");
@@ -896,22 +895,20 @@ public class EdgeBot2 {
 
     // Lower the lift
     public void lowerLiftMotor(double power) {
-        //intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setPower(power);
     }
 
     // Raise the lift
     public void raiseLiftMotor(double power) {
-        //intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotor.setPower(power);
     }
 
     // Stop the lift
     public void stopLiftMotor() {
-        //liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setTargetPosition(liftMotor.getCurrentPosition());
+        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //liftMotor.setPower(0.2);
         liftMotor.setPower(0);
     }
 
@@ -1004,7 +1001,7 @@ public class EdgeBot2 {
 
     // Open the intake servos
     public void openIntakeServos() {
-        intakeServoBottom.setPosition(1);
+        intakeServoBottom.setPosition(0.7);
         intakeServoTop.setPosition(1);
     }
 
