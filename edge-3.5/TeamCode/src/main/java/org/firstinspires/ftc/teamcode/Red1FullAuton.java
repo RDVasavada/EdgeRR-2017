@@ -167,11 +167,7 @@ public class Red1FullAuton extends LinearOpMode {
             robot.raiseLiftMotor(0.5);
         }
 
-        robot.waitForTick(10);
-
         robot.stopLiftMotor();
-
-        robot.waitForTick(500);
 
         // Drive forwards with center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
