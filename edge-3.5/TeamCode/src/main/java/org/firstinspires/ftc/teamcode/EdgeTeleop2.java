@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Teleop Mode")
+@TeleOp(name="Teleop Mode With Intake")
 //@Disabled
-public class EdgeTeleop extends LinearOpMode {
+public class EdgeTeleop2 extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -49,18 +49,6 @@ public class EdgeTeleop extends LinearOpMode {
                 telemetry.addData("Lift ", "down");
             } else {
                 robot.stopLiftMotor();
-            }
-
-            // Update the clamp servos
-            if (gamepad1.a) {
-                robot.closeClampServos();
-                telemetry.addData("Clamp servos ", "closing");
-            } else if (gamepad1.b) {
-                robot.openClampServosHalfway();
-                telemetry.addData("Clamp servos ", "opening halfway");
-            } else if (gamepad1.y) {
-                robot.openClampServos();
-                telemetry.addData("Clamp servos ", "open fully");
             }
 
             // Update the crane rotation servo
