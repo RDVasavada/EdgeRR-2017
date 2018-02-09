@@ -40,8 +40,8 @@ public class EdgeBot2 {
     public Servo jewelLiftServo = null;
     public Servo jewelFlipServo = null;
 
-    public Servo clampServoLeft = null;
-    public Servo clampServoRight = null;
+    public Servo intakeServoBottom = null;
+    public Servo intakeServoTop = null;
 
     public Servo clawWristServo = null;
     public Servo clawPinchServo = null;
@@ -109,10 +109,10 @@ public class EdgeBot2 {
         resetJewelServos();
 
         // Initialize the clamp servos
-        clampServoLeft = hMap.servo.get("leftclamp");
-        clampServoRight = hMap.servo.get("rightclamp");
+        intakeServoBottom = hMap.servo.get("topintake");
+        intakeServoBottom = hMap.servo.get("bottomintake");
 
-        openClampServos();
+        //openIntakeServos();
 
         // Initialize the crane servos
         clawWristServo = hMap.servo.get("clawwrist");
@@ -910,6 +910,18 @@ public class EdgeBot2 {
         liftMotor.setPower(0);
     }
 
+    // Make the intake pick up (intake)
+    public void intakeIn() {
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setPower(Constants.INTAKE_SPEED);
+    }
+
+    // Make the intake expel blocks (expulsion)
+    public void intakeOut() {
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setPower(Constants.INTAKE_SPEED);
+    }
+
     // Move the crane backward
     public void craneMotorBackward() {
         craneExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -968,22 +980,22 @@ public class EdgeBot2 {
         jewelFlipServo.setPosition(0.5);
     }
 
-    // Close the clamp servos
-    public void closeClampServos() {
-        clampServoLeft.setPosition(0.71);
-        clampServoRight.setPosition(0.24);
+    // Close the intake servos
+    public void closeIntakeServos() {
+        intakeServoBottom.setPosition(0.71);
+        intakeServoTop.setPosition(0.24);
     }
 
-    // Open the clamp servos halfway for isolating one block
-    public void openClampServosHalfway() {
-        clampServoLeft.setPosition(0.58);
-        clampServoRight.setPosition(0.37);
+    // Open the intake servos halfway for isolating one block
+    public void openIntakeServosHalfway() {
+        intakeServoBottom.setPosition(0.58);
+        intakeServoTop.setPosition(0.37);
     }
 
-    // Open the clamp servos
-    public void openClampServos() {
-        clampServoLeft.setPosition(0.30);
-        clampServoRight.setPosition(0.65);
+    // Open the intake servos
+    public void openIntakeServos() {
+        intakeServoBottom.setPosition(0.30);
+        intakeServoTop.setPosition(0.65);
     }
 
     // Move the wrist up

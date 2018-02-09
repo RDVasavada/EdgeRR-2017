@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 public class Constants {
     // Motor constants
     public static final double ENCODER_COUNTS_PER_INCH = 39;
+    public static final double INTAKE_SPEED = 0.2;
     public static final double CRANE_SPEED = 0.8;
 
     // Color sensor ranges
