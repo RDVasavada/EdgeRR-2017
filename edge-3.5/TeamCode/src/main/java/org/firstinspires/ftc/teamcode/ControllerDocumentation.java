@@ -8,6 +8,8 @@ package org.firstinspires.ftc.teamcode;
         - Dpad Up: Raise hook
         - Left Trigger: Lift down
         - Right Trigger: Lift up
+        - Left Bumper: Intake
+        - Right Bumper: Reverse Intake
         - A Button: Clamp servos closed
         - B Button: Clamp servos half open
         - Y Button: Clamp servos fully open

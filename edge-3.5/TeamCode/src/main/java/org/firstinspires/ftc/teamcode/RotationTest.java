@@ -24,7 +24,8 @@ public class RotationTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.rotateToGyroHeading(90, 0.3, telemetry);
-        robot.rotateToGyroHeading(0, 0.3, telemetry);
+        robot.rotateToGyroHeading2(90, 0.3, telemetry);
+        robot.rotateToGyroHeading2(0, 0.3, telemetry);
+        robot.rotateToGyroHeading2(180, 0.3, telemetry);
     }
 }

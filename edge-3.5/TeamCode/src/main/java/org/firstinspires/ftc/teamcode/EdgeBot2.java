@@ -20,9 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.opencv.core.Mat;
 
-public class EdgeBot {
+public class EdgeBot2 {
     // Declare motors
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
@@ -75,7 +74,7 @@ public class EdgeBot {
     public LinearOpMode currentOpmode;
 
     // Constructor
-    public EdgeBot() {
+    public EdgeBot2() {
 
     }
 
@@ -95,6 +94,9 @@ public class EdgeBot {
 
         // Initialize the lift motor
         liftMotor = hMap.dcMotor.get("liftmotor");
+
+        // Initialize the intake motor
+        intakeMotor = hMap.dcMotor.get("intakemotor");
 
         // Initialize the crane extension motor
         craneExtensionMotor = hMap.dcMotor.get("cranemotor");
