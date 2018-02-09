@@ -31,6 +31,8 @@ public class EdgeBot {
 
     public DcMotor liftMotor = null;
 
+    public DcMotor intakeMotor = null;
+
     public DcMotor craneExtensionMotor = null;
 
     public DcMotor craneRotateMotor = null;
@@ -52,8 +54,10 @@ public class EdgeBot {
     // Declare imu (inertial motion unit)
     public BNO055IMU imu = null;
 
-    // Declare distance sensor
-    public ModernRoboticsI2cRangeSensor distanceSensor = null;
+    // Declare distance sensors
+    public ModernRoboticsI2cRangeSensor rearSensor = null;
+    public ModernRoboticsI2cRangeSensor frontSensor = null;
+    public ModernRoboticsI2cRangeSensor cryptoboxSensor = null;
 
     // Declare color sensors
     public ColorSensor leftColorSensor = null;
@@ -136,8 +140,10 @@ public class EdgeBot {
 
         imu.initialize(parameters);
 
-        // Initialize the distance sensor
-        distanceSensor = hMap.get(ModernRoboticsI2cRangeSensor.class, "distance");
+        // Initialize the distance sensors
+        rearSensor = hMap.get(ModernRoboticsI2cRangeSensor.class, "distance");
+        frontSensor = hMap.get(ModernRoboticsI2cRangeSensor.class, "frontdistance");
+        cryptoboxSensor = hMap.get(ModernRoboticsI2cRangeSensor.class, "cryptodistance");
 
         // Initialize the color sensors
         leftColorSensor = hMap.colorSensor.get("colorleft");
@@ -668,13 +674,13 @@ public class EdgeBot {
 
             rotateClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
         } else if (degreesToRotate < 0) {
-            // Should rotate counterclockwise
+            // Should rotate clockwise
             degreesToRotate *= -1;
 
-            rotateCounterClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
-        } else if (degreesToRotate < 180) {
-            // Should rotate clockwise
             rotateClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
+        } else if (degreesToRotate < 180) {
+            // Should rotate counterclockwise
+            rotateCounterClockwiseEncoder(Math.round(degreesToRotate), speed, telemetry);
         } else if (degreesToRotate > 180) {
             // Should rotate counterclockwise
             degreesToRotate = 360 - degreesToRotate;
@@ -994,9 +1000,19 @@ public class EdgeBot {
         return angles.firstAngle;
     }
 
-    // Return the range sensor's distance (in inches)
+    // Return the rear range sensor's distance (in inches)
     public double getRangeSensorDistance() {
-        return distanceSensor.getDistance(DistanceUnit.INCH);
+        return rearSensor.getDistance(DistanceUnit.INCH);
+    }
+
+    // Return the front range sensor's distance
+    public double getFrontRangeSensorDistance() {
+        return frontSensor.getDistance(DistanceUnit.INCH);
+    }
+
+    // Return the cryptobox range sensor's distance
+    public double getCryptoboxRangeSensorDistance() {
+        return cryptoboxSensor.getDistance(DistanceUnit.INCH);
     }
 
     // Displays RGB info from the color sensors
