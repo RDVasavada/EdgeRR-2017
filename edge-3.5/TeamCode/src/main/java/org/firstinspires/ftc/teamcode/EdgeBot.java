@@ -47,8 +47,6 @@ public class EdgeBot {
     public Servo clawWristServo = null;
     public Servo clawPinchServo = null;
 
-    public CRServo hookServo = null;
-
     public Servo phoneServo = null;
 
     // Declare imu (inertial motion unit)
@@ -120,9 +118,6 @@ public class EdgeBot {
 
         clawWristDown();
         clawPinch();
-
-        // Initialize the hook servo
-        //hookServo = hMap.crservo.get("hookservo");
 
         // Initialize the phone servo
         phoneServo = hMap.servo.get("phoneservo");
@@ -1022,23 +1017,6 @@ public class EdgeBot {
     // Open the claw
     public void clawOpen() {
         clawPinchServo.setPosition(1);
-    }
-
-    // Lower the hook
-    public void lowerHook() {
-        hookServo.setDirection(DcMotorSimple.Direction.REVERSE);
-        hookServo.setPower(0.1);
-    }
-
-    // Raise the hook
-    public void raiseHook() {
-        hookServo.setDirection(DcMotorSimple.Direction.FORWARD);
-        hookServo.setPower(0.1);
-    }
-
-    // Stop the hook servo
-    public void hookServoStop() {
-        hookServo.setPower(0);
     }
 
     // Move the phone servo so that the phone is parallel to side of the robot
