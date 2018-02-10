@@ -179,7 +179,7 @@ public class Red2FullAutonNEW extends LinearOpMode {
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 31.5;
+            double error = distance - 29;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -195,7 +195,7 @@ public class Red2FullAutonNEW extends LinearOpMode {
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 25;
+            double error = distance - 23;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -211,7 +211,7 @@ public class Red2FullAutonNEW extends LinearOpMode {
 
             double distance = robot.getRangeSensorDistance();
 
-            double error = distance - 14;
+            double error = distance - 12;
 
             if (error > 1 && error < 4) {
                 robot.driveBackwardForInches(error, 0.4);
@@ -235,8 +235,7 @@ public class Red2FullAutonNEW extends LinearOpMode {
         robot.driveBackwardForInches(3, 0.2);
         robot.driveForwardForInches(3, 0.2);
 
-        // Back up and turn around
-        robot.driveBackwardForInches(8, 0.3);
-        robot.rotateClockwiseEncoder(180, 0.3, telemetry);
+        // Back up
+        robot.driveBackwardForInches(6, 0.3);
     }
 }

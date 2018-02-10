@@ -172,7 +172,7 @@ public class Red1FullAutonNEW extends LinearOpMode {
 
         // Drive forwards with center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(46.5, 0.4);
+            robot.driveForwardForInches(45.5, 0.4);
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
             robot.driveForwardForInches(37, 0.4);
         } else if (column == RelicRecoveryVuMark.RIGHT) {
@@ -181,7 +181,7 @@ public class Red1FullAutonNEW extends LinearOpMode {
 
         // Rotate clockwise 90 degrees and drive forwards into the column
         robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(10, 0.2);
+        robot.driveForwardForInches(9, 0.2);
 
         // Open the clamp servos to drop the block
         robot.openIntakeServos();
@@ -190,9 +190,8 @@ public class Red1FullAutonNEW extends LinearOpMode {
         robot.driveBackwardForInches(3, 0.2);
         robot.driveForwardForInches(3, 0.2);
 
-        // Back up and turn around
+        // Back up
         robot.driveBackwardForInches(8, 0.3);
-        robot.rotateClockwiseEncoder(180, 0.3, telemetry);
     }
 }
 

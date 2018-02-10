@@ -235,8 +235,7 @@ public class Blue2FullAutonNEW extends LinearOpMode {
         robot.driveBackwardForInches(3, 0.2);
         robot.driveForwardForInches(3, 0.2);
 
-        // Back up and turn around
+        // Back up
         robot.driveBackwardForInches(8, 0.3);
-        robot.rotateClockwiseEncoder(180, 0.3, telemetry);
     }
 }

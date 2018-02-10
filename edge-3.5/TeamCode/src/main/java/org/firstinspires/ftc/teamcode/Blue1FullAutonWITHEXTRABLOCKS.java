@@ -10,9 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "Blue 1 Full Autonomous With Intake")
+@Autonomous(name = "Blue 1 Full Autonomous - EXTRA BLOCKS")
 //@Disabled
-public class Blue1FullAutonNEW extends LinearOpMode {
+public class Blue1FullAutonWITHEXTRABLOCKS extends LinearOpMode {
 
     // The hardware object
     EdgeBot2 robot;
