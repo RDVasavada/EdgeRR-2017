@@ -32,18 +32,11 @@ public class Blue1FullAutonNEW extends LinearOpMode {
     // Incidental Timer
     ElapsedTime period;
 
-    // Autonomous Timer
-    ElapsedTime autonomousTime;
-
     @Override
     public void runOpMode() {
         // Initialize the hardware object
         robot = new EdgeBot2();
         robot.init(hardwareMap, this);
-
-        // Start the autonomous timer
-        autonomousTime = new ElapsedTime();
-        autonomousTime.reset();
 
         jewelFlipped = false;
         orientationDetermined = false;

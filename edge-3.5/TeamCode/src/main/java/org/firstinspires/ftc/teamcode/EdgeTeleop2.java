@@ -13,17 +13,30 @@ public class EdgeTeleop2 extends LinearOpMode {
     // Declaring the hardware object
     EdgeBot2 robot;
 
+    // Boolean for lift motor
+    boolean liftMotorSlack;
+
     @Override
     public void runOpMode() {
         // Initializing the hardware object
         robot = new EdgeBot2();
         robot.init(hardwareMap, this);
 
+        liftMotorSlack = false;
+
         // Wait for the driver to press play
         waitForStart();
+
         runtime.reset();
 
         while (opModeIsActive()) {
+
+            // Update the boolean
+            if (gamepad1.dpad_up) {
+                liftMotorSlack = false;
+            } else if (gamepad1.dpad_down) {
+                liftMotorSlack = true;
+            }
 
             // Scale  motor values
             double forwardSpeed = gamepad1.left_stick_y;
@@ -47,8 +60,10 @@ public class EdgeTeleop2 extends LinearOpMode {
             } else if (gamepad1.left_trigger > 0.2) {
                 robot.lowerLiftMotor();
                 telemetry.addData("Lift ", "down");
-            } else {
+            } else if (!liftMotorSlack){
                 robot.stopLiftMotor();
+            } else if (liftMotorSlack) {
+                robot.slackLiftMotor();
             }
 
             // Update the intake motor

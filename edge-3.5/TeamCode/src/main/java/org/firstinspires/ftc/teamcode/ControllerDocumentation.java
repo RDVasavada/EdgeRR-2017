@@ -4,8 +4,8 @@ package org.firstinspires.ftc.teamcode;
     Controller 1:
         - Left Joystick: Mecanum Drive and Strafe
         - Right Joystick: Mecanum Rotate
-        - Dpad Down: Lower hook
-        - Dpad Up: Raise hook
+        - Dpad Down: Lift Motor Slack Mode
+        - Dpad Up: Lift Motor Stop Mode
         - Left Trigger: Lift down
         - Right Trigger: Lift up
         - A Button: Clamp servos closed

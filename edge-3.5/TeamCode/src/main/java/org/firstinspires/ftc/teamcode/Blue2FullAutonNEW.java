@@ -5,15 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "Red 1 Full Autonomous With Intake")
+@Autonomous(name = "Blue 2 Full Autonomous With Intake")
 //@Disabled
-public class Red1FullAutonNEW extends LinearOpMode {
+public class Blue2FullAutonNEW extends LinearOpMode {
 
     // The hardware object
     EdgeBot2 robot;
@@ -27,13 +26,10 @@ public class Red1FullAutonNEW extends LinearOpMode {
     // The location of the red ball
     boolean redOnLeft;
 
-    // Whether a block has been grabbed
-    boolean blockGrabbed;
-
     // Vuforia
     VuforiaLocalizer vuforiaInstance;
 
-    // Incidental Timer
+    // Timer
     ElapsedTime period;
 
     @Override
@@ -47,6 +43,9 @@ public class Red1FullAutonNEW extends LinearOpMode {
 
         // Wait for the start button to be pressed.
         waitForStart();
+
+        // Turn on the LEDs
+        //robot.turnOnLEDs();
 
         // Close the clamp servos
         robot.closeIntakeServos();
@@ -96,12 +95,12 @@ public class Red1FullAutonNEW extends LinearOpMode {
 
                 // Act depending on the orientation of the balls
                 if (redOnLeft) {
-                    robot.jewelFlipRight();
+                    robot.jewelFlipLeft();
                     telemetry.addLine()
                             .addData("Red detected on ", "left")
                             .addData("Blue detected on ", "right");
                 } else {
-                    robot.jewelFlipLeft();
+                    robot.jewelFlipRight();
                     telemetry.addLine()
                             .addData("Blue detected on ", "left")
                             .addData("Red detected on ", "right");
@@ -170,18 +169,64 @@ public class Red1FullAutonNEW extends LinearOpMode {
 
         robot.stopLiftMotor();
 
-        // Drive forwards with center as the default column
+        // Drive backwards off of the balancing stone and rotate counterclockwise 90 degrees
+        robot.driveBackwardForInches(28, 0.4);
+        robot.rotateCounterClockwiseEncoder(90, 0.25, telemetry);
+
+        // Drive forwards with distance sensor correction and center as the default column
         if (column == RelicRecoveryVuMark.LEFT) {
-            robot.driveForwardForInches(46.5, 0.4);
+            robot.driveForwardForInches(7.5, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 20;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
+            }
+
+            telemetry.update();
         } else if (column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            robot.driveForwardForInches(37, 0.4);
+            robot.driveForwardForInches(15.5, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 27.25;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
+            }
+
+            telemetry.update();
         } else if (column == RelicRecoveryVuMark.RIGHT) {
-            robot.driveForwardForInches(29, 0.4);
+            robot.driveForwardForInches(23.8, 0.4);
+
+            double distance = robot.getRangeSensorDistance();
+
+            double error = distance - 33.7;
+
+            if (error > 1 && error < 4) {
+                robot.driveBackwardForInches(error, 0.4);
+                telemetry.addData("Correction: ", error);
+            } else if (error < -1 && error > -4) {
+                robot.driveForwardForInches(Math.abs(error), 0.4);
+                telemetry.addData("Correction: ", error);
+            }
+
+            telemetry.update();
         }
 
-        // Rotate clockwise 90 degrees and drive forwards into the column
-        robot.rotateClockwiseEncoder(90, 0.3, telemetry);
-        robot.driveForwardForInches(10, 0.2);
+        // Rotate counterclockwise 90 degrees and drive forwards into the column
+        robot.rotateCounterClockwiseEncoder(90, 0.25, telemetry);
+        robot.driveForwardForInches(8, 0.2);
 
         // Open the clamp servos to drop the block
         robot.openIntakeServos();
@@ -195,4 +240,3 @@ public class Red1FullAutonNEW extends LinearOpMode {
         robot.rotateClockwiseEncoder(180, 0.3, telemetry);
     }
 }
-
