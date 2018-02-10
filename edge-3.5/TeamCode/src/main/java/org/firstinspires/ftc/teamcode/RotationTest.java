@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RotationTest extends LinearOpMode {
 
     // The hardware object
-    EdgeBot robot;
+    EdgeBot2 robot;
 
     // Timer
     ElapsedTime timer;
@@ -17,15 +17,15 @@ public class RotationTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the hardware object
-        robot = new EdgeBot();
+        robot = new EdgeBot2();
         robot.init(hardwareMap, this);
 
         timer = new ElapsedTime();
 
         waitForStart();
 
-        robot.rotateToGyroHeading2(90, 0.3, telemetry);
-        robot.rotateToGyroHeading2(0, 0.3, telemetry);
-        robot.rotateToGyroHeading2(180, 0.3, telemetry);
+        robot.rotateToGyroHeading2(90, 1, telemetry);
+        robot.rotateToGyroHeading2(0, 1, telemetry);
+        robot.rotateToGyroHeading2(180, 1, telemetry);
     }
 }

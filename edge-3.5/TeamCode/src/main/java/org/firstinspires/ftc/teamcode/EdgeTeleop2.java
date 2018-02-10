@@ -42,23 +42,23 @@ public class EdgeTeleop2 extends LinearOpMode {
 
             // Update the lift motor
             if (gamepad1.right_trigger > 0.2) {
-                robot.raiseLiftMotor(gamepad1.right_trigger);
+                robot.raiseLiftMotor();
                 telemetry.addData("Lift ", "up");
             } else if (gamepad1.left_trigger > 0.2) {
-                robot.lowerLiftMotor(gamepad1.left_trigger);
+                robot.lowerLiftMotor();
                 telemetry.addData("Lift ", "down");
             } else {
                 robot.stopLiftMotor();
             }
 
             // Update the intake motor
-            if (gamepad1.right_bumper) {
+            if (gamepad2.left_bumper) {
                 robot.intakeIn();
                 telemetry.addData("Intake ", "in");
-            } else if (gamepad1.left_bumper) {
+            } else if (gamepad2.right_bumper) {
                 robot.intakeOut();
                 telemetry.addData("Intake ", "out");
-            } else if (gamepad1.x) {
+            } else if (gamepad2.dpad_down || gamepad2.dpad_left || gamepad2.dpad_up || gamepad2.dpad_right) {
                 robot.intakeStop();
             }
 
@@ -112,9 +112,6 @@ public class EdgeTeleop2 extends LinearOpMode {
             if (gamepad2.y) {
                 robot.clawPinch();
                 telemetry.addData("claw ", "pinching");
-            } else if (gamepad2.right_bumper) {
-                robot.clawPinchHalfway();
-                telemetry.addData("claw ", "pinching halfway");
             } else if (gamepad2.x) {
                 robot.clawOpen();
                 telemetry.addData("claw ", "opening");

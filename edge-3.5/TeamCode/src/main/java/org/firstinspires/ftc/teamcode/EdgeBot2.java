@@ -702,7 +702,7 @@ public class EdgeBot2 {
 
         if (degreesToRotate < 0) {
             // Loop until we reach the target heading
-            while (Math.abs(degreesToRotate) > 2) {
+            while (Math.abs(degreesToRotate) > 1) {
                 // Retrieve current heading and calculate error
                 float currentHeading = getRawGyroHeading();
                 degreesToRotate = targetHeading - currentHeading;
@@ -894,21 +894,25 @@ public class EdgeBot2 {
     }
 
     // Lower the lift
-    public void lowerLiftMotor(double power) {
+    public void lowerLiftMotor() {
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftMotor.setPower(power);
+        liftMotor.setPower(1);
     }
 
     // Raise the lift
-    public void raiseLiftMotor(double power) {
+    public void raiseLiftMotor() {
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        liftMotor.setPower(power);
+        liftMotor.setPower(1);
     }
 
     // Stop the lift
     public void stopLiftMotor() {
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        //liftMotor.setPower(0.2);
+        liftMotor.setPower(0.2);
+    }
+
+    // Make the lift motor slack
+    public void slackLiftMotor() {
         liftMotor.setPower(0);
     }
 
