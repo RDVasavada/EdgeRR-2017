@@ -201,6 +201,7 @@ public class Blue1FullAutonWITHEXTRABLOCKS extends LinearOpMode {
         robot.rotateClockwiseEncoder(180, 0.5, telemetry);
 
         // Lower the lift motor
+        period.reset();
         while (period.seconds() < 0.5 && opModeIsActive()) {
             robot.lowerLiftMotor();
         }
@@ -240,7 +241,7 @@ public class Blue1FullAutonWITHEXTRABLOCKS extends LinearOpMode {
         }
 
         // Drive back and turn around
-        robot.driveBackwardForInches(12, 0.4);
+        robot.driveBackwardForInches(18, 0.4);
 
         robot.rotateToGyroHeading(-90, 0.5, telemetry);
 
